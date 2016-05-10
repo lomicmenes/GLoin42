@@ -23,7 +23,7 @@ public class Enregistrement extends AppCompatActivity {
         startActivity(intent) ;
 
 
-        int toto ;
+        
 
 }
 }
