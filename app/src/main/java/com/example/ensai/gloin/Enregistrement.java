@@ -28,17 +28,16 @@ public class Enregistrement extends AppCompatActivity {
         EditText pseudo = (EditText) findViewById(R.id.pseudo);
         EditText mail = (EditText) findViewById(R.id.mail);
         EditText numero = (EditText) findViewById(R.id.numero);
-        rempli = (motdepasse.getText() != null && pseudo.getText().toString() != null && mail != null && numero != null);
+        rempli = (!(motdepasse.getText().toString().equals("") ) && !(pseudo.getText().toString().equals("")) && !(mail.getText().toString().equals(""))  && !(numero .getText().toString().equals("")));
 
-        motDePasseCorrect = ((String)motdepasse.getText().toString()).equals(motdepasse.getText().toString());
-        Toast.makeText(this,""+rempli+ " "+ motDePasseCorrect, Toast.LENGTH_LONG).show();
+        motDePasseCorrect = ((String)motdepasse.getText().toString()).equals(motdepasse2.getText().toString());
 
         if (motDePasseCorrect && rempli) {
 
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
-        else Toast.makeText(this ,"erreur sur les mots de passe ou champs non rempli",Toast.LENGTH_LONG).show();
+        else Toast.makeText(this ,"erreurs sur les mots de passe ou champs       non rempli",Toast.LENGTH_LONG).show();
 
 
 

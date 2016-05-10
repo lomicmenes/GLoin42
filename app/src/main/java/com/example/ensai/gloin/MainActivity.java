@@ -18,6 +18,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent) ;
     }
 
+    public void validerMdp (View v){
+        Intent intent = new Intent (this ,PagePrincipal.class) ;
+        startActivity(intent) ;
+    }
+
 
 
     //Commentaire inutile
