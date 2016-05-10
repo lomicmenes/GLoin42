@@ -19,10 +19,10 @@
         <activity android:name=".Enregistrement">
         </activity>
         <activity android:name=".VenteImageActivity">
-
-
-
         </activity>
+
+    <activity android:name=".PagePrincipal">
+    </activity>
     </application>
 
 </manifest>

@@ -36,9 +36,10 @@ public class Enregistrement extends AppCompatActivity {
 
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            finish();
+
         }
         else Toast.makeText(this ,"erreurs sur les mots de passe ou champs       non rempli",Toast.LENGTH_LONG).show();
-
 
 
 
