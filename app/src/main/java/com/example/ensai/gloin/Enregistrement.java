@@ -22,5 +22,8 @@ public class Enregistrement extends AppCompatActivity {
         Intent intent = new Intent (this ,MainActivity.class) ;
         startActivity(intent) ;
 
+
+        int toto ;
+
 }
 }
