@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">GLoin</string>
+    <string name="Bonjour">Bonjour </string>
+    <string name="enregistrer">S\'enregistrer </string>
+    <string name="bienvenue">Bienvenue </string>
+    <string name="pseudo">Pseudo </string>
+    <string name="motdepasse">Mot de passe </string>
+    <string name="numero">Numéro </string>
+    <string name="mail">Mail </string>
+    <string name="valider">Valider </string>
+
+
+
+
+
+</resources>
