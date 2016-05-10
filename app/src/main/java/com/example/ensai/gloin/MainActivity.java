@@ -11,6 +11,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent = new Intent (this ,VenteImageActivity.class) ;
+        startActivity(intent) ;
+        finish();
     }
 
     public void enregistrement (View v){
