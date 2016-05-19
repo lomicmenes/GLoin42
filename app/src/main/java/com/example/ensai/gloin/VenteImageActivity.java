@@ -1,9 +1,12 @@
 package com.example.ensai.gloin;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -64,16 +68,30 @@ public class VenteImageActivity extends AppCompatActivity {
                 imgView.setImageBitmap(BitmapFactory
                         .decodeFile(imgDecodableString));
 
+                Button venteButton = (Button) findViewById(R.id.buttonVenteImage);
+                venteButton.setVisibility(View.VISIBLE);
+
             } else {
-                Toast.makeText(this, "You haven't picked Image",
+                Toast.makeText(this, "Pas d'image sélectionnée",
                         Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
             Log.e("Image","erreur",e);
-            Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
+            Toast.makeText(this, "quelque chose ne va pas", Toast.LENGTH_LONG)
                     .show();
         }
 
+    }
+
+    public void venteImage(View v){
+        ConnectivityManager connectivityManager=(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo=connectivityManager.getActiveNetworkInfo();
+        if(networkInfo != null && networkInfo.isConnected()){
+            Log.i("CONNEXION", "Je suis connecté!");
+        } else {
+            Toast.makeText(this,R.string.pasDeConnexion,Toast.LENGTH_SHORT).show();
+            Log.w("CONNEXION", "Je ne suis pas connecté");
+        }
     }
 
 

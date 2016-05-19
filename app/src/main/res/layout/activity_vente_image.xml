@@ -20,4 +20,15 @@
         android:text="@string/charger_img" >
     </Button>
 
+    <Button
+        android:id="@+id/buttonVenteImage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_weight="0"
+        android:onClick="venteImage"
+        android:text="@string/vente_img" >
+    </Button>
+
 </LinearLayout>

@@ -9,8 +9,10 @@
     <string name="mail">Mail </string>
     <string name="valider">Valider </string>
     <string name="charger_img">Charger une image </string>
+    <string name="vente_img">Vendre l\'image </string>
     <string name="vendre">Vendre </string>
     <string name="acheter">Acheter </string>
+    <string name="pasDeConnexion">Connexion indisponible </string>
 
 
 
