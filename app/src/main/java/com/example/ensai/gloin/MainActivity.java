@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,17 +27,24 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void validerMdp (View v){
+        String motdepasse =  findViewById(R.id.motdepasse).toString();
+        String pseudo =  findViewById(R.id.pseudo).toString();
         boolean validation =false  ;
 
         boolean validatio ;
-        validatio = base.PseudoInTheBase("rpg") ;
+        validatio = base.pseudoInTheBase(pseudo) ;
         Toast.makeText(this , ""+validatio,Toast.LENGTH_SHORT).show();
-
-        if(validation) {
-
-            Intent intent = new Intent(this, PagePrincipal.class);
-            startActivity(intent);
+        if (validatio) {
+            if (motdepasse.equals(base.findTheMdp(pseudo))) {
+                Intent intent = new Intent(this, PagePrincipal.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Mot de Passe faux REMEMBER ", Toast.LENGTH_SHORT).show();
+            }
         }
+        else { Toast.makeText(this , " Votre pseudo n'est pas dans la base ", Toast.LENGTH_SHORT).show();
+
+       
     }
 
 
