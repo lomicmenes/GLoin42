@@ -1,6 +1,7 @@
 package com.example.ensai.gloin;
 
 import android.Manifest;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -19,12 +21,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * Created by ensai on 10/05/16.
  */
 public class VenteImageActivity extends AppCompatActivity {
 
     private static int RESULT_LOAD_IMG = 1;
+    private static String DRIVE_URL="https://drive.google.com/drive/my-drive";
     String imgDecodableString;
 
     @Override
@@ -87,7 +97,39 @@ public class VenteImageActivity extends AppCompatActivity {
         ConnectivityManager connectivityManager=(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo=connectivityManager.getActiveNetworkInfo();
         if(networkInfo != null && networkInfo.isConnected()){
-            Log.i("CONNEXION", "Je suis connecté!");
+            Log.i("CONNEXION", "Je suis connecté au réseau!");
+            try{
+                File direct = new File(Environment.getExternalStorageDirectory()
+                        + "/AnhsirkDasarp");
+
+                if (!direct.exists()) {
+                    direct.mkdirs();
+                }
+                Uri uri = Uri.parse(DRIVE_URL);
+//                HttpURLConnection connexion=(HttpURLConnection) url.openConnection();
+//                Log.i("CONNEXION", "Connexion à : " + DRIVE_URL);
+//                connexion.setReadTimeout(10000 /* milliseconds */);
+//                connexion.setConnectTimeout(15000 /* milliseconds */);
+//                connexion.setRequestMethod("GET");
+//                connexion.setDoInput(true);
+//                // Démarrer la requête
+//                connexion.connect();
+//                InputStream is = connexion.getInputStream();
+                DownloadManager dManager= (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                DownloadManager.Request request = new DownloadManager.Request(uri);
+
+                request.setAllowedNetworkTypes(
+                        DownloadManager.Request.NETWORK_WIFI
+                                | DownloadManager.Request.NETWORK_MOBILE)
+                        .setAllowedOverRoaming(false).setTitle("Demo")
+                        .setDescription("Something useful. No, really.")
+                        .setDestinationInExternalPublicDir("/AnhsirkDasarpFiles", "fileName.jpg");
+                dManager.enqueue(request);
+
+
+            }catch(Exception e){
+                Log.e("DOWNLOAD", e.getMessage());
+            }
         } else {
             Toast.makeText(this,R.string.pasDeConnexion,Toast.LENGTH_SHORT).show();
             Log.w("CONNEXION", "Je ne suis pas connecté");
