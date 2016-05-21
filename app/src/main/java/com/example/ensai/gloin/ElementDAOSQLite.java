@@ -107,19 +107,22 @@ public class ElementDAOSQLite extends SQLiteOpenHelper  {
         Cursor cursor = getReadableDatabase().rawQuery(" SELECT gloin FROM UTILISATEUR WHERE PSEUDO = ? ", new String []  {pseudo});
         cursor.moveToNext();
         gloin = cursor.getInt(0);
+        Log.i("trouverGlo", ""+gloin);
         cursor.close();
         return gloin ;
     }
 
 
-    public void changerGloin (String pseudo, int minus){
+    public void changerGloin (String pseudo, int ajout){
         int gloin ;
         Cursor cursor = getReadableDatabase().rawQuery(" SELECT gloin FROM UTILISATEUR WHERE PSEUDO = ? ;", new String []  {pseudo});
         cursor.moveToNext();
         gloin = cursor.getInt(0);
-        gloin= gloin - minus ;
-        getReadableDatabase().rawQuery(" UPDATE UTILISATEUR SET Gloin  =" + gloin + " WHERE PSEUDO = ? ;", new String[]{pseudo});
+        gloin= gloin + ajout ;
+        getWritableDatabase().execSQL(" UPDATE UTILISATEUR SET GLOIN  = " + gloin + " WHERE PSEUDO = ? ;", new String[]{pseudo});
+        Log.i("passe chang", "" + gloin);
         cursor.close();
+
 
     }
 

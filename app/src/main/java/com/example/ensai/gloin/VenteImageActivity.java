@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -26,6 +27,8 @@ public class VenteImageActivity extends AppCompatActivity {
 
     private static int RESULT_LOAD_IMG = 1;
     String imgDecodableString;
+    ImageView imageView ;
+    EditText nomImage ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +71,15 @@ public class VenteImageActivity extends AppCompatActivity {
                 imgView.setImageBitmap(BitmapFactory
                         .decodeFile(imgDecodableString));
 
+                imageView = imgView ;
+
                 Button venteButton = (Button) findViewById(R.id.buttonVenteImage);
                 venteButton.setVisibility(View.VISIBLE);
+
+                EditText editText =(EditText) findViewById(R.id.nomImage);
+
+                nomImage = editText ;
+               editText.setVisibility(View.VISIBLE);
 
             } else {
                 Toast.makeText(this, "Pas d'image sélectionnée",

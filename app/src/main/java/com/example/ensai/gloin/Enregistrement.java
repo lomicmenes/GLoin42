@@ -52,7 +52,7 @@ public class Enregistrement extends AppCompatActivity {
            ;Element element = new Element(pseudo.getText().toString(),motdepasse.getText().toString(),numero.getText().toString(),mail.getText().toString(), 100);
 
             base.ajouterElement(element);
-            Toast.makeText(this,""+element.getPseudo(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"bienvenue "+element.getPseudo()+ " votre compte a été crédité de 100 Gloins ",Toast.LENGTH_SHORT).show();
 
 
             Intent intent = new Intent(this, MainActivity.class);

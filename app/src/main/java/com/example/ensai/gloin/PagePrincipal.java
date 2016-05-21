@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,18 +31,27 @@ public class PagePrincipal extends AppCompatActivity {
         Intent intent = getIntent();
         String pseudo = intent.getStringExtra("pseudo");
         Log.i("passeINfo", pseudo) ;
-         gloin =base.trouverGloin(pseudo);
 
 
-        base.changerGloin(pseudo , 20);
-
-        gloin=base.trouverGloin(pseudo);
+        gloin= base.trouverGloin(pseudo);
         Log.i("passegloin", ""+gloin ) ;
-
 
 
         TextView result = (TextView) findViewById(R.id.nbrGloin);
         result.setText("vous avez :" + gloin + " Gloins");
+    }
+
+
+    public void acheter (View v) {
+        if (gloin ==0){ Toast.makeText(this, "tu n'as plus de Gloin :( passe à la boutique pour en racheter" ,Toast.LENGTH_SHORT).show();}
+        else {}
+
+    }
+
+    public void vendre (View v){
+        Intent intent = new Intent(this, VenteImageActivity.class);
+        startActivity(intent);
+
     }
 
 
