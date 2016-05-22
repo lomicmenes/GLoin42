@@ -34,7 +34,7 @@ import java.net.URL;
 public class VenteImageActivity extends AppCompatActivity {
 
     private static int RESULT_LOAD_IMG = 1;
-    private static String DRIVE_URL="https://drive.google.com/drive/my-drive";
+    private static final String SERVER_ADDRESS = "http://file-manager.000webhost.com/file-manager/index.php";
     String imgDecodableString;
 
     @Override
@@ -105,7 +105,7 @@ public class VenteImageActivity extends AppCompatActivity {
                 if (!direct.exists()) {
                     direct.mkdirs();
                 }
-                Uri uri = Uri.parse(DRIVE_URL);
+//                  Uri uri = Uri.parse(DRIVE_URL);
 //                HttpURLConnection connexion=(HttpURLConnection) url.openConnection();
 //                Log.i("CONNEXION", "Connexion à : " + DRIVE_URL);
 //                connexion.setReadTimeout(10000 /* milliseconds */);
@@ -116,15 +116,15 @@ public class VenteImageActivity extends AppCompatActivity {
 //                connexion.connect();
 //                InputStream is = connexion.getInputStream();
                 DownloadManager dManager= (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                DownloadManager.Request request = new DownloadManager.Request(uri);
+//                DownloadManager.Request request = new DownloadManager.Request(uri);
 
-                request.setAllowedNetworkTypes(
-                        DownloadManager.Request.NETWORK_WIFI
-                                | DownloadManager.Request.NETWORK_MOBILE)
-                        .setAllowedOverRoaming(false).setTitle("Demo")
-                        .setDescription("Something useful. No, really.")
-                        .setDestinationInExternalPublicDir("/AnhsirkDasarpFiles", "fileName.jpg");
-                dManager.enqueue(request);
+//                request.setAllowedNetworkTypes(
+//                        DownloadManager.Request.NETWORK_WIFI
+//                                | DownloadManager.Request.NETWORK_MOBILE)
+//                        .setAllowedOverRoaming(false).setTitle("Demo")
+//                        .setDescription("Something useful. No, really.")
+//                        .setDestinationInExternalPublicDir("/AnhsirkDasarpFiles", "fileName.jpg");
+//                dManager.enqueue(request);
 
 
             }catch(Exception e){
