@@ -62,6 +62,7 @@ public class VenteImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vente_image);
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        ActivityCompat.requestPermissions(this, new  String[] {Manifest.permission.INTERNET},1);
     }
 
     public void chargerImgDepuisGallery(View v){
@@ -120,46 +121,6 @@ public class VenteImageActivity extends AppCompatActivity {
     }
 
     public void venteImage(View v){
-        /*ConnectivityManager connectivityManager=(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo=connectivityManager.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected()){
-            Log.i("CONNEXION", "Je suis connecté au réseau!");
-            try{
-                File direct = new File(Environment.getExternalStorageDirectory()
-                        + "/AnhsirkDasarp");
-
-                if (!direct.exists()) {
-                    direct.mkdirs();
-                }
-//                  Uri uri = Uri.parse(DRIVE_URL);
-//                HttpURLConnection connexion=(HttpURLConnection) url.openConnection();
-//                Log.i("CONNEXION", "Connexion à : " + DRIVE_URL);
-//                connexion.setReadTimeout(10000 /* milliseconds */;
-//                connexion.setConnectTimeout(15000 /* milliseconds */);
-//                connexion.setRequestMethod("GET");
-//                connexion.setDoInput(true);
-//                // Démarrer la requête
-//                connexion.connect();
-//                InputStream is = connexion.getInputStream();
-                DownloadManager dManager= (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-//                DownloadManager.Request request = new DownloadManager.Request(uri);
-
-//                request.setAllowedNetworkTypes(
-//                        DownloadManager.Request.NETWORK_WIFI
-//                                | DownloadManager.Request.NETWORK_MOBILE)
-//                        .setAllowedOverRoaming(false).setTitle("Demo")
-//                        .setDescription("Something useful. No, really.")
-//                        .setDestinationInExternalPublicDir("/AnhsirkDasarpFiles", "fileName.jpg");
-//                dManager.enqueue(request);
-
-
-          /*  }catch(Exception e){
-                Log.e("DOWNLOAD", e.getMessage());
-            }
-        } else {
-            Toast.makeText(this,R.string.pasDeConnexion,Toast.LENGTH_SHORT).show();
-            Log.w("CONNEXION", "Je ne suis pas connecté");
-        } */
 
 
         Bitmap image = ((BitmapDrawable) imageToUpLoad.getDrawable() ).getBitmap();
@@ -203,6 +164,7 @@ public class VenteImageActivity extends AppCompatActivity {
 
             try{
                 post.setEntity(new UrlEncodedFormEntity(dataToSend));
+                Log.d("upload","Va uploader l'image " + name);
                 client.execute(post);
             }
             catch(Exception e){
@@ -225,8 +187,8 @@ public class VenteImageActivity extends AppCompatActivity {
 
         private HttpParams getHttpParams() {
             HttpParams httpParams = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParams, 1000 * 3);
-            HttpConnectionParams.setSoTimeout(httpParams, 1000*3);
+            HttpConnectionParams.setConnectionTimeout(httpParams, 1000 * 30);
+            HttpConnectionParams.setSoTimeout(httpParams, 1000*30);
             return httpParams ;
 
         }

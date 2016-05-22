@@ -26,6 +26,9 @@
 
     <activity android:name=".PagePrincipal">
     </activity>
+
+    <activity android:name=".AchatImageActvity">
+    </activity>
     </application>
 
 </manifest>
