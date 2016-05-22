@@ -13,6 +13,10 @@
     <string name="vendre">Vendre </string>
     <string name="acheter">Acheter </string>
     <string name="pasDeConnexion">Connexion indisponible </string>
+    <string name="profit">Profit total espéré </string>
+    <string name="minPrice">Prix minimum </string>
+    <string name="maxPrice">Prix de départ </string>
+    <string name="nomImage">Nom de l'image </string>
 
 
 

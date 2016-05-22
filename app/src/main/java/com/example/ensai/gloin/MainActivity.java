@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     public void validerMdp(View v) {
         EditText motdepasse = (EditText) findViewById(R.id.motdepasseM);
         EditText pseudo = (EditText) findViewById(R.id.pseudoM);
-        Log.i("afficahge  ", pseudo.getText().toString() + " "  +motdepasse.getText().toString()) ;
+        Log.i("affichage  ", pseudo.getText().toString() + " "  +motdepasse.getText().toString()) ;
         boolean validation = false;
         String mdp ;
         boolean validatio;

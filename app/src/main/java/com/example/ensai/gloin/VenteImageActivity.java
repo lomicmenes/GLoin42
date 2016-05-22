@@ -11,9 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -23,6 +21,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.ensai.gloin.XML.XMLWriter;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -37,13 +37,6 @@ import org.apache.http.params.HttpParams;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 /**
  * Created by ensai on 10/05/16.
  */
@@ -55,11 +48,16 @@ public class VenteImageActivity extends AppCompatActivity {
     String imgDecodableString;
     ImageView imageToUpLoad ;
     EditText nomImage ;
-
+    EditText profit ;
+    EditText minPrice ;
+    EditText maxPrice ;
+    String pseudo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vente_image);
+        Intent intent = getIntent();
+        pseudo = intent.getStringExtra("pseudo");
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         ActivityCompat.requestPermissions(this, new  String[] {Manifest.permission.INTERNET},1);
@@ -122,18 +120,35 @@ public class VenteImageActivity extends AppCompatActivity {
 
     public void venteImage(View v){
 
-
+        buildXml();
         Bitmap image = ((BitmapDrawable) imageToUpLoad.getDrawable() ).getBitmap();
         try {
             new UpLoadImage(image, nomImage.getText().toString()).execute();
         }
-        catch (Exception e){
+        catch (Exception e) {
             Log.e("upLoad", "On a mal upload");
         }
+    }
 
+    private void buildXml() {
+        
+        profit = (EditText) findViewById(R.id.profit);
+        minPrice = (EditText) findViewById(R.id.minPrice);
+        maxPrice = (EditText) findViewById(R.id.maxPrice);
+        nomImage = (EditText) findViewById(R.id.nomImage);
 
+        int profitInt = Integer.valueOf(profit.getText().toString());
+        int minPriceInt = Integer.valueOf(minPrice.getText().toString());
+        int maxPriceInt = Integer.valueOf(maxPrice.getText().toString());
+        String nomImageString = nomImage.getText().toString();
 
+        Image image = new Image(nomImageString, profitInt, minPriceInt, maxPriceInt);
 
+        try {
+            String imageXml = XMLWriter.writeUsingXMLSerializer(image);
+        } catch (Exception e) {
+            Log.e("XML", e.getMessage());
+        }
     }
 
     private class UpLoadImage extends AsyncTask< Void , Void , Void >{

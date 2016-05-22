@@ -14,7 +14,38 @@
         android:id="@+id/nomImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:hint="@string/nomImage"
         android:visibility="gone"
+        android:maxLines="1"
+        android:inputType="text"
+        />
+
+    <EditText
+        android:id="@+id/profit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:hint="@string/profit"
+        android:maxLines="1"
+        android:inputType="text"
+        />
+
+    <EditText
+        android:id="@+id/maxPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:hint="@string/maxPrice"
+        android:maxLines="1"
+        android:inputType="text"
+        />
+
+    <EditText
+        android:id="@+id/minPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:hint="@string/minPrice"
         android:maxLines="1"
         android:inputType="text"
         />

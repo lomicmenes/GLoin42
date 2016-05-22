@@ -22,6 +22,7 @@ public class PagePrincipal extends AppCompatActivity {
 
 
     int gloin =100 ;
+    String pseudo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +30,7 @@ public class PagePrincipal extends AppCompatActivity {
         base =  new ElementDAOSQLite(this);
         List<Element>  elements = base.chargerElements() ;
         Intent intent = getIntent();
-        String pseudo = intent.getStringExtra("pseudo");
+        pseudo = intent.getStringExtra("pseudo");
         Log.i("passeINfo", pseudo) ;
 
 
@@ -52,6 +53,7 @@ public class PagePrincipal extends AppCompatActivity {
 
     public void vendre (View v){
         Intent intent = new Intent(this, VenteImageActivity.class);
+        intent.putExtra("pseudo", pseudo );
         startActivity(intent);
 
     }
