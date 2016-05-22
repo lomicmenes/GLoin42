@@ -29,7 +29,7 @@
 
 
     <EditText
-        android:id="@+id/pseudo"
+        android:id="@+id/pseudoM"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,12 +39,12 @@
         android:textSize="@dimen/font_size_larger"
         android:maxLines="1"
         android:inputType="text"
-        android:layout_above="@+id/motdepasse"
+        android:layout_above="@+id/motdepasseM"
         android:hint="@string/pseudo" />
 
 
     <EditText
-        android:id="@+id/motdepasse"
+        android:id="@+id/motdepasseM"
         android:inputType="textPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
         android:id="@+id/validerMdp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/motdepasse"
+        android:layout_below="@+id/motdepasseM"
         android:layout_centerHorizontal="true"
         android:text="@string/valider"
         android:onClick="validerMdp"/>

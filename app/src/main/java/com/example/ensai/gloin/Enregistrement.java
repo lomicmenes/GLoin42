@@ -34,6 +34,7 @@ public class Enregistrement extends AppCompatActivity {
 
         boolean motDePasseCorrect;
         boolean rempli ;
+        boolean alreadyInBase ;
         EditText motdepasse = (EditText) findViewById(R.id.motdepasse);
         EditText motdepasse2 = (EditText) findViewById(R.id.motdepasse2);
         EditText pseudo = (EditText) findViewById(R.id.pseudo);
@@ -42,14 +43,16 @@ public class Enregistrement extends AppCompatActivity {
         rempli = (!(motdepasse.getText().toString().equals("") ) && !(pseudo.getText().toString().equals("")) && !(mail.getText().toString().equals(""))  && !(numero .getText().toString().equals("")));
 
         motDePasseCorrect = ((String)motdepasse.getText().toString()).equals(motdepasse2.getText().toString());
+        alreadyInBase = base.pseudoInTheBase(pseudo.getText().toString());
 
-        if (motDePasseCorrect && rempli) {
+
+        if (motDePasseCorrect && rempli && !alreadyInBase) {
 
 
            ;Element element = new Element(pseudo.getText().toString(),motdepasse.getText().toString(),numero.getText().toString(),mail.getText().toString(), 100);
 
             base.ajouterElement(element);
-            Toast.makeText(this,""+element.getPseudo(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"bienvenue "+element.getPseudo()+ " votre compte a été crédité de 100 Gloins ",Toast.LENGTH_SHORT).show();
 
 
             Intent intent = new Intent(this, MainActivity.class);
@@ -57,19 +60,12 @@ public class Enregistrement extends AppCompatActivity {
             finish();
 
         }
-        else {Toast.makeText(this ,"erreurs sur les mots de passe ou champs       non rempli",Toast.LENGTH_LONG).show();}
+            if (alreadyInBase) {
+                Toast.makeText(this, "pseudo déjà utilisé", Toast.LENGTH_LONG).show();
+            } else {
 
-        List<Element> elementList = base.chargerElements();
-
-        for ( Element element : elementList ) {
-
-            Toast.makeText(this,""+element.getPseudo(),Toast.LENGTH_SHORT).show();
-            Toast.makeText(this,""+element.getMotDePasse(),Toast.LENGTH_SHORT).show();
-            Toast.makeText(this,""+element.getNumero(),Toast.LENGTH_SHORT).show();
-            Toast.makeText(this,""+element.getMail(),Toast.LENGTH_SHORT).show();
-        }
-
-
+                Toast.makeText(this, "erreurs sur les mots de passe ou champs non rempli", Toast.LENGTH_LONG).show();
+            }
 
 
 

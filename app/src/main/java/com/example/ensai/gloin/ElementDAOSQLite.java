@@ -19,6 +19,7 @@ public class ElementDAOSQLite extends SQLiteOpenHelper  {
 
     private static final int DATA_BASE_VERSION = 1 ;
     private static final String DATA_BASE_NAME ="MA BASE " ;
+    SQLiteDatabase db ;
 
     public ElementDAOSQLite(Context context) {
         super(context, DATA_BASE_NAME, null, DATA_BASE_VERSION);
@@ -56,7 +57,7 @@ public class ElementDAOSQLite extends SQLiteOpenHelper  {
             element.setGloin(cursor.getInt(4));
             elements.add(element);
             /*Toast.makeText(this, ""+element.getPseudo(),Toast.LENGTH_SHORT).show();*/
-            Log.i("TAG", "" + element.getPseudo());
+            Log.i("TAG", "Pseudo " + element.getPseudo() + " mdp "+ element.getMotDePasse());
         }
         cursor.close();
 
@@ -80,6 +81,7 @@ public class ElementDAOSQLite extends SQLiteOpenHelper  {
         boolean validation ;
         int count ;
         Cursor cursor = getReadableDatabase().rawQuery(" SELECT MotDePasse FROM UTILISATEUR WHERE PSEUDO = ? ", new String []  {pseudo});
+        Log.d("peudo in the base ", cursor.toString() + " compyr " + cursor.getCount());
         if (cursor.getCount()==1){
             validation = true ;
         }
@@ -91,12 +93,38 @@ public class ElementDAOSQLite extends SQLiteOpenHelper  {
 
     public String findTheMdp (String pseudo){
         String motDePasse ;
-        Cursor cursor = getReadableDatabase().rawQuery(" SELECT MotDePasse FROM UTILISATEUR WHERE PSEUDO = ? ", new String []  {pseudo});
+        Cursor cursor = getReadableDatabase().rawQuery(" SELECT MotDePasse FROM UTILISATEUR WHERE PSEUDO = ? ;", new String []  {pseudo});
+        Log.d("find the mot de paxa ", cursor.toString()+ " compyr " +cursor.getCount());
+        cursor.moveToNext();
         motDePasse = cursor.getString(0);
         cursor.close();
         return motDePasse ;
     }
 
+
+    public int trouverGloin (String pseudo){
+        int gloin ;
+        Cursor cursor = getReadableDatabase().rawQuery(" SELECT gloin FROM UTILISATEUR WHERE PSEUDO = ? ", new String []  {pseudo});
+        cursor.moveToNext();
+        gloin = cursor.getInt(0);
+        Log.i("trouverGlo", ""+gloin);
+        cursor.close();
+        return gloin ;
+    }
+
+
+    public void changerGloin (String pseudo, int ajout){
+        int gloin ;
+        Cursor cursor = getReadableDatabase().rawQuery(" SELECT gloin FROM UTILISATEUR WHERE PSEUDO = ? ;", new String []  {pseudo});
+        cursor.moveToNext();
+        gloin = cursor.getInt(0);
+        gloin= gloin + ajout ;
+        getWritableDatabase().execSQL(" UPDATE UTILISATEUR SET GLOIN  = " + gloin + " WHERE PSEUDO = ? ;", new String[]{pseudo});
+        Log.i("passe chang", "" + gloin);
+        cursor.close();
+
+
+    }
 
 
 
