@@ -12,22 +12,15 @@
 
     <EditText
         android:id="@+id/nomImage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+
+        android:hint="nom de l'image à acheter"
         android:maxLines="1"
         android:inputType="text"
         />
 
-    <Button
-        android:id="@+id/buttonChargerImage"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="0"
-        android:onClick="chargerImgDepuisServeur"
-        android:text="@string/charger_img" >
-    </Button>
+
 
 
     <Button
@@ -35,10 +28,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"
         android:layout_weight="0"
         android:onClick="acheterImage"
-        android:text="@string/vente_img" >
+        android:text="@string/acheter" >
     </Button>
 
 
