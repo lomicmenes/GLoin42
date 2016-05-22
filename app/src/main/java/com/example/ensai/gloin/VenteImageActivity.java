@@ -5,22 +5,37 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,9 +50,10 @@ import java.net.URL;
 public class VenteImageActivity extends AppCompatActivity {
 
     private static int RESULT_LOAD_IMG = 1;
-    private static final String SERVER_ADDRESS = "http://file-manager.000webhost.com/file-manager/index.php";
+
+    private static final String SERVER_ADDRESS = "http://axel-gloin.netai.net/";
     String imgDecodableString;
-    ImageView imageView ;
+    ImageView imageToUpLoad ;
     EditText nomImage ;
 
     @Override
@@ -81,7 +97,7 @@ public class VenteImageActivity extends AppCompatActivity {
                 imgView.setImageBitmap(BitmapFactory
                         .decodeFile(imgDecodableString));
 
-                imageView = imgView ;
+                imageToUpLoad = imgView ;
 
                 Button venteButton = (Button) findViewById(R.id.buttonVenteImage);
                 venteButton.setVisibility(View.VISIBLE);
@@ -104,7 +120,7 @@ public class VenteImageActivity extends AppCompatActivity {
     }
 
     public void venteImage(View v){
-        ConnectivityManager connectivityManager=(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        /*ConnectivityManager connectivityManager=(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo=connectivityManager.getActiveNetworkInfo();
         if(networkInfo != null && networkInfo.isConnected()){
             Log.i("CONNEXION", "Je suis connecté au réseau!");
@@ -118,7 +134,7 @@ public class VenteImageActivity extends AppCompatActivity {
 //                  Uri uri = Uri.parse(DRIVE_URL);
 //                HttpURLConnection connexion=(HttpURLConnection) url.openConnection();
 //                Log.i("CONNEXION", "Connexion à : " + DRIVE_URL);
-//                connexion.setReadTimeout(10000 /* milliseconds */);
+//                connexion.setReadTimeout(10000 /* milliseconds */;
 //                connexion.setConnectTimeout(15000 /* milliseconds */);
 //                connexion.setRequestMethod("GET");
 //                connexion.setDoInput(true);
@@ -137,12 +153,82 @@ public class VenteImageActivity extends AppCompatActivity {
 //                dManager.enqueue(request);
 
 
-            }catch(Exception e){
+          /*  }catch(Exception e){
                 Log.e("DOWNLOAD", e.getMessage());
             }
         } else {
             Toast.makeText(this,R.string.pasDeConnexion,Toast.LENGTH_SHORT).show();
             Log.w("CONNEXION", "Je ne suis pas connecté");
+        } */
+
+
+        Bitmap image = ((BitmapDrawable) imageToUpLoad.getDrawable() ).getBitmap();
+        try {
+            new UpLoadImage(image, nomImage.getText().toString()).execute();
+        }
+        catch (Exception e){
+            Log.e("upLoad", "On a mal upload");
+        }
+
+
+
+
+    }
+
+    private class UpLoadImage extends AsyncTask< Void , Void , Void >{
+
+        String name ;
+        Bitmap image ;
+
+        public UpLoadImage(Bitmap image , String name){
+            this.name =  name ;
+            this.image =  image;
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG , 100 ,byteArrayOutputStream) ;
+            String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(),Base64.DEFAULT);
+
+            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
+            dataToSend.add(new BasicNameValuePair("image" , encodedImage)  );
+            dataToSend.add(new BasicNameValuePair("name" , name)) ;
+
+            HttpParams httpParams = getHttpParams();
+
+            HttpClient client = new DefaultHttpClient(httpParams);
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "uploadImg.php" );
+
+            try{
+                post.setEntity(new UrlEncodedFormEntity(dataToSend));
+                client.execute(post);
+            }
+            catch(Exception e){
+                Log.e("connection", "pbl de co ");
+            }
+
+
+            return null ;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            Toast.makeText(getApplicationContext() ," l'image est upLOad" , Toast.LENGTH_SHORT).show();
+
+
+        }
+
+        private HttpParams getHttpParams() {
+            HttpParams httpParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParams, 1000 * 3);
+            HttpConnectionParams.setSoTimeout(httpParams, 1000*3);
+            return httpParams ;
+
         }
     }
 

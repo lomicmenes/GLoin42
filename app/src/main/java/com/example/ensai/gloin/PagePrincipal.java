@@ -44,7 +44,9 @@ public class PagePrincipal extends AppCompatActivity {
 
     public void acheter (View v) {
         if (gloin ==0){ Toast.makeText(this, "tu n'as plus de Gloin :( passe à la boutique pour en racheter" ,Toast.LENGTH_SHORT).show();}
-        else {}
+        else {
+            Toast.makeText(this, " tu essais d'acheter ", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
