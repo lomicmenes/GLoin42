@@ -14,8 +14,6 @@
         android:id="@+id/nomImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:hint="nom de l'image à acheter"
         android:maxLines="1"
         android:inputType="text"
         />

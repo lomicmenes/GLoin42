@@ -3,8 +3,10 @@ package com.example.ensai.gloin;
 import android.Manifest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,16 +33,20 @@ public class AchatImageActvity extends AppCompatActivity {
 
     ImageView downloadedImage ;
     EditText name ;
+    Bitmap b ;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_achat_image);
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
+        downloadedImage = (ImageView) findViewById(R.id.imgView);
+
     }
 
 
-    public void achatImage(View v) {
+    public void acheterImage(View v) {
         name = (EditText) findViewById(R.id.nomImage);
         if (!(name.getText().toString().equals(""))) {
 
@@ -50,9 +56,21 @@ public class AchatImageActvity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.e("downLoad", "On a mal download");
             }
+            try {
+                saveImageToGallery(downloadedImage , name.getText().toString(), b);
+                Toast.makeText(this ,"image sauvé en galerie", Toast.LENGTH_SHORT).show();
+            }
+            catch (Exception e){
+                Log.e("THUG" , "ta pas sauver l'iamge das la galerei");
+            }
+
         } else {
             Toast.makeText(this, " SI TU METS PAS DE NOM CA VA PAS MARCHE BANANE !", Toast.LENGTH_SHORT).show();
         }
+    }
+    private void saveImageToGallery(ImageView imageView , String name ,  Bitmap b){
+        imageView.setDrawingCacheEnabled(true);
+        MediaStore.Images.Media.insertImage(this.getContentResolver(), b,name , "description");
     }
 
 
@@ -87,17 +105,15 @@ public class AchatImageActvity extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             if (bitmap!=null){
+                b = bitmap ;
                downloadedImage.setImageBitmap(bitmap);
+            }
+            else{
+                Toast.makeText(getApplicationContext() , "sorry wrong name try again !  ", Toast.LENGTH_SHORT).show();
             }
         }
     }
-    private HttpParams getHttpParams() {
-        HttpParams httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParams, 1000 * 30);
-        HttpConnectionParams.setSoTimeout(httpParams, 1000*30);
-        return httpParams ;
 
-    }
 
 
 }

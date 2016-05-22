@@ -120,7 +120,7 @@ public class VenteImageActivity extends AppCompatActivity {
 
     public void venteImage(View v){
 
-        buildXml();
+       /* buildXml();*/
         Bitmap image = ((BitmapDrawable) imageToUpLoad.getDrawable() ).getBitmap();
         try {
             new UpLoadImage(image, nomImage.getText().toString()).execute();
