@@ -13,21 +13,38 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     ElementDAOSQLite base;
+    List<Element> elementList ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        base = new ElementDAOSQLite(this);
-        List<Element> elementList = base.chargerElements();
 
-        for ( Element element : elementList ) {
 
-            /*Toast.makeText(this,""+element.getPseudo(),Toast.LENGTH_SHORT).show();*/
+
+        /*for ( Element element : elementList ) {
+
+            /*Toast.makeText(this,""+element.getPseudo(),Toast.LENGTH_SHORT).show();
             Log.d("TAG", element.getPseudo());
 
 
-        }
+        } */
+
+        Runnable code = new Runnable() {
+            @Override
+            public void run() {
+                base = new ElementDAOSQLite(getApplicationContext());
+                elementList   = base.chargerElements();
+                Log.e("MARCHE" , "c'est juste pour savoir si ca a effectuer ca ");
+            }
+        };
+        new Thread(code).start();
+
+
+
+
+
+
 
     }
 
@@ -48,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         boolean validation = false;
         String mdp ;
         boolean validatio;
+
         validatio = base.pseudoInTheBase(pseudo.getText().toString());
 
         Log.i("debug", "" + validatio + " ");
@@ -69,4 +87,6 @@ public class MainActivity extends AppCompatActivity {
         //Commentaire inutile
 
     }
+
+
 }

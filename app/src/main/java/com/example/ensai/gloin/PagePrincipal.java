@@ -30,19 +30,30 @@ public class PagePrincipal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
-        base =  new ElementDAOSQLite(this);
-        List<Element>  elements = base.chargerElements() ;
+
+
         Intent intent = getIntent();
         pseudo = intent.getStringExtra("pseudo");
         Log.i("passeINfo", pseudo) ;
 
 
-        gloin= base.trouverGloin(pseudo);
-        Log.i("passegloin", ""+gloin ) ;
 
 
-        TextView result = (TextView) findViewById(R.id.nbrGloin);
-        result.setText("vous avez :" + gloin + " Gloins");
+        Runnable code = new Runnable() {
+            @Override
+            public void run() {
+                base = new ElementDAOSQLite(getApplicationContext());
+                gloin= base.trouverGloin(pseudo);
+                Log.i("passegloin", ""+gloin ) ;
+                Log.e("MARCHE", "c'est juste pour savoir si ca a effectuer ca ");
+
+                TextView result = (TextView) findViewById(R.id.nbrGloin);
+                result.setText("vous avez :" + gloin + " Gloins");
+            }
+        };
+        new Thread(code).start();
+
+
 
 
        //new  MettreAJour().execute() ;
@@ -64,17 +75,21 @@ public class PagePrincipal extends AppCompatActivity {
         @Override
         protected Integer doInBackground(Void... params) {
 
-            ajout = 0 ;
 
-            // code pour recuperer les donnnees dans le xml
-            for (Image image : images){
-                ajout  = ajout +image.getPrice() ; /*- le truc recuperer  */
+            ajout = 0;
+            if (images.size()!=0) {
+
+
+                // code pour recuperer les donnnees dans le xml
+                for (Image image : images) {
+                    ajout = ajout + image.getPrice(); /*- le truc recuperer  */
+                }
+
             }
 
 
-
-
             return ajout;
+                
         }
 
         @Override

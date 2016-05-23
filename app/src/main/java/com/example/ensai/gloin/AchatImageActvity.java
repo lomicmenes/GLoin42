@@ -21,6 +21,7 @@ import org.apache.http.params.HttpParams;
 import org.w3c.dom.Document;
 
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -84,6 +85,7 @@ public class AchatImageActvity extends AppCompatActivity {
     private class DownloadImage extends AsyncTask<Void, Void, Bitmap>{
 
         String name ;
+        URLConnection connection = null ;
 
         public DownloadImage(String name ){
             this.name = name ;
@@ -95,9 +97,16 @@ public class AchatImageActvity extends AppCompatActivity {
             String url = SERVER_ADRESS + "/pictures/"+name +".JPG" ;
 
             try{
-                URLConnection connection = new URL(url).openConnection();
+                URL ad = new URL(url);
+                connection = (HttpURLConnection) ad.openConnection();
+                /*connection = new URL(url).openConnection();*/
+
                 connection.setReadTimeout(1000 * 3);
-                connection.setConnectTimeout(1000*3);
+                connection.setConnectTimeout(1000 * 3);
+
+
+
+
 
                 return BitmapFactory.decodeStream((InputStream) connection.getContent() , null ,null);
 
@@ -105,6 +114,7 @@ public class AchatImageActvity extends AppCompatActivity {
             catch (Exception e){
                 Log.e("pbl load im", "pbl URL");
             }
+
             return null;
         }
 
@@ -118,6 +128,7 @@ public class AchatImageActvity extends AppCompatActivity {
             else{
                 Toast.makeText(getApplicationContext() , "sorry wrong name try again !  ", Toast.LENGTH_SHORT).show();
             }
+
         }
     }
 

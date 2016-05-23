@@ -3,6 +3,7 @@ package com.example.ensai.gloin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -22,8 +23,17 @@ public class Enregistrement extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enregistrement);
-        base =  new ElementDAOSQLite(this);
 
+
+
+        Runnable code = new Runnable() {
+            @Override
+            public void run() {
+                base = new ElementDAOSQLite(getApplicationContext());
+                Log.e("MARCHE", "c'est juste pour savoir si ca a effectuer ca ");
+            }
+        };
+        new Thread(code).start();
 
     }
     public void validerEnregistrement (View v){
@@ -57,12 +67,15 @@ public class Enregistrement extends AppCompatActivity {
             finish();
 
         }
+
+            else {
             if (alreadyInBase) {
                 Toast.makeText(this, "pseudo déjà utilisé", Toast.LENGTH_LONG).show();
-            } else {
-
-                Toast.makeText(this, "erreurs sur les mots de passe ou champs non rempli", Toast.LENGTH_LONG).show();
             }
+            else {
+            Toast.makeText(this, "erreurs sur les mots de passe ou champs non rempli", Toast.LENGTH_LONG).show();
+            }
+        }
 
 
 
