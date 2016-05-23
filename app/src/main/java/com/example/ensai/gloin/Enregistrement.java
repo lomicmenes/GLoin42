@@ -15,7 +15,7 @@ public class Enregistrement extends AppCompatActivity {
 
 
     ElementDAOSQLite base ;
-
+    public static final int REGISTER_GIFT=1000;
 
 
 
@@ -56,13 +56,14 @@ public class Enregistrement extends AppCompatActivity {
         if (motDePasseCorrect && rempli && !alreadyInBase) {
 
 
-           ;Element element = new Element(pseudo.getText().toString(),motdepasse.getText().toString(),numero.getText().toString(),mail.getText().toString(), 100);
+           ;Element element = new Element(pseudo.getText().toString(),motdepasse.getText().toString(),numero.getText().toString(),mail.getText().toString(), REGISTER_GIFT);
 
             base.ajouterElement(element);
-            Toast.makeText(this,"bienvenue "+element.getPseudo()+ " votre compte a été crédité de 100 Gloins ",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"bienvenue "+element.getPseudo()+ " votre compte a été crédité de "+REGISTER_GIFT +"Gloins ",Toast.LENGTH_SHORT).show();
 
 
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, PagePrincipal.class);
+            intent.putExtra("pseudo" ,pseudo.getText().toString() );
             startActivity(intent);
             finish();
 
