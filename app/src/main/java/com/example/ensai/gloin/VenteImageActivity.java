@@ -58,9 +58,14 @@ public class VenteImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vente_image);
         Intent intent = getIntent();
         pseudo = intent.getStringExtra("pseudo");
+
+        profit = (EditText) findViewById(R.id.profit);
+        minPrice = (EditText) findViewById(R.id.minPrice);
+        maxPrice = (EditText) findViewById(R.id.maxPrice);
+        nomImage = (EditText) findViewById(R.id.nomImage);
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        ActivityCompat.requestPermissions(this, new  String[] {Manifest.permission.INTERNET},1);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
     }
 
     public void chargerImgDepuisGallery(View v){
@@ -100,6 +105,9 @@ public class VenteImageActivity extends AppCompatActivity {
 
                 Button venteButton = (Button) findViewById(R.id.buttonVenteImage);
                 venteButton.setVisibility(View.VISIBLE);
+                profit.setVisibility(View.VISIBLE);
+                minPrice.setVisibility(View.VISIBLE);
+                maxPrice.setVisibility(View.VISIBLE);
 
                 EditText editText =(EditText) findViewById(R.id.nomImage);
 
@@ -119,23 +127,34 @@ public class VenteImageActivity extends AppCompatActivity {
     }
 
     public void venteImage(View v){
+        try{
+            String name = ((EditText) findViewById(R.id.nomImage)).getText().toString();
+            String imageXml = buildXml();
+            try {
+                new UpLoadXML(imageXml, name).execute();
+            }
+            catch (Exception e) {
+                Log.e("upLoad", "On a mal upload");
+            }
 
-       /* buildXml();*/
-        Bitmap image = ((BitmapDrawable) imageToUpLoad.getDrawable() ).getBitmap();
-        try {
-            new UpLoadImage(image, nomImage.getText().toString()).execute();
+            Bitmap image = ((BitmapDrawable) imageToUpLoad.getDrawable() ).getBitmap();
+            try {
+                new UpLoadImage(image, nomImage.getText().toString()).execute();
+            }
+            catch (Exception e) {
+                Log.e("upLoad", "On a mal upload");
+            }
+        } catch (NumberFormatException e){
+            Log.e("XML", e.getMessage());
+            Toast.makeText(this, "Merci de remplir tous les champs",Toast.LENGTH_LONG).show();
         }
         catch (Exception e) {
             Log.e("upLoad", "On a mal upload");
         }
     }
 
-    private void buildXml() {
-        
-        profit = (EditText) findViewById(R.id.profit);
-        minPrice = (EditText) findViewById(R.id.minPrice);
-        maxPrice = (EditText) findViewById(R.id.maxPrice);
-        nomImage = (EditText) findViewById(R.id.nomImage);
+    private String buildXml() {
+        String imageXml="";
 
         int profitInt = Integer.valueOf(profit.getText().toString());
         int minPriceInt = Integer.valueOf(minPrice.getText().toString());
@@ -143,12 +162,16 @@ public class VenteImageActivity extends AppCompatActivity {
         String nomImageString = nomImage.getText().toString();
 
         Image image = new Image(nomImageString, profitInt, minPriceInt, maxPriceInt);
+        image.setSeller(pseudo);
 
         try {
-            String imageXml = XMLWriter.writeUsingXMLSerializer(image);
+            imageXml = XMLWriter.writeUsingXMLSerializer(image);
+
         } catch (Exception e) {
             Log.e("XML", e.getMessage());
         }
+
+        return imageXml;
     }
 
     private class UpLoadImage extends AsyncTask< Void , Void , Void >{
@@ -196,6 +219,61 @@ public class VenteImageActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
 
             Toast.makeText(getApplicationContext() ," l'image est upLOad" , Toast.LENGTH_SHORT).show();
+
+
+        }
+
+        private HttpParams getHttpParams() {
+            HttpParams httpParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParams, 1000 * 30);
+            HttpConnectionParams.setSoTimeout(httpParams, 1000*30);
+            return httpParams ;
+
+        }
+    }
+
+    private class UpLoadXML extends AsyncTask< Void , Void , Void >{
+
+        String xml ;
+        String name;
+
+        public UpLoadXML(String xml, String name){
+            this.xml =  xml;
+            this.name=  name;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
+            Log.d("XML", "Mon joli xml : " + xml);
+            dataToSend.add(new BasicNameValuePair("xml" , xml));
+            dataToSend.add(new BasicNameValuePair("name" , name)) ;
+
+            HttpParams httpParams = getHttpParams();
+
+            HttpClient client = new DefaultHttpClient(httpParams);
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "uploadXML.php" );
+
+            try{
+                post.setEntity(new UrlEncodedFormEntity(dataToSend));
+                Log.d("upload","Va le XML associé à " + name);
+                client.execute(post);
+            }
+            catch(Exception e){
+                Log.e("connection", "pbl de co ");
+            }
+
+
+            return null ;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            Toast.makeText(getApplicationContext() ," Le XML est uploadé" , Toast.LENGTH_SHORT).show();
 
 
         }

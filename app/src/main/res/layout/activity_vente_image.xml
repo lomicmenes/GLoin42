@@ -27,7 +27,7 @@
         android:visibility="gone"
         android:hint="@string/profit"
         android:maxLines="1"
-        android:inputType="text"
+        android:inputType="number"
         />
 
     <EditText
@@ -37,7 +37,7 @@
         android:visibility="gone"
         android:hint="@string/maxPrice"
         android:maxLines="1"
-        android:inputType="text"
+        android:inputType="number"
         />
 
     <EditText
@@ -47,7 +47,7 @@
         android:visibility="gone"
         android:hint="@string/minPrice"
         android:maxLines="1"
-        android:inputType="text"
+        android:inputType="number"
         />
 
     <Button

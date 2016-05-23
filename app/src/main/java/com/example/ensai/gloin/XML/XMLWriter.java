@@ -1,5 +1,6 @@
 package com.example.ensai.gloin.XML;
 
+import android.util.Log;
 import android.util.Xml;
 
 import com.example.ensai.gloin.Image;
@@ -31,7 +32,7 @@ public class XMLWriter {
         xmlSerializer.attribute("", Image.MIN_PRICE, String.valueOf(image.getMinPrice()));
         xmlSerializer.attribute("", Image.MAX_PRICE, String.valueOf(image.getMaxPrice()));
 
-        // close tag <business-price>
+        // close tag <business-plan>
         xmlSerializer.endTag("", Image.BUSINESS_PLAN);
 
         // open tag: <status>
@@ -49,6 +50,9 @@ public class XMLWriter {
         // end DOCUMENT
         xmlSerializer.endDocument();
 
-        return writer.toString();
+        String result = writer.toString().replace('/',Character.MIN_VALUE);
+        Log.d("XML", "Mon joli XML : " + result);
+
+        return result;
     }
 }
