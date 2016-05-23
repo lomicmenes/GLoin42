@@ -129,9 +129,16 @@ public class VenteImageActivity extends AppCompatActivity {
     public void venteImage(View v){
         try{
             String name = ((EditText) findViewById(R.id.nomImage)).getText().toString();
-            String imageXml = buildXml();
+            int profitInt = Integer.valueOf(profit.getText().toString());
+            int minPriceInt = Integer.valueOf(minPrice.getText().toString());
+            int maxPriceInt = Integer.valueOf(maxPrice.getText().toString());
+            String nomImageString = nomImage.getText().toString();
+
+            Image imageUp = new Image(nomImageString, profitInt, minPriceInt, maxPriceInt);
+            imageUp.setSeller(pseudo);
+            //String imageXml = buildXml();
             try {
-                new UpLoadXML(imageXml, name).execute();
+                new UpLoadXML(imageUp, name).execute();
             }
             catch (Exception e) {
                 Log.e("upLoad", "On a mal upload");
@@ -234,11 +241,11 @@ public class VenteImageActivity extends AppCompatActivity {
 
     private class UpLoadXML extends AsyncTask< Void , Void , Void >{
 
-        String xml ;
+        Image image ;
         String name;
 
-        public UpLoadXML(String xml, String name){
-            this.xml =  xml;
+        public UpLoadXML(Image image, String name){
+            this.image =  image;
             this.name=  name;
         }
 
@@ -246,14 +253,22 @@ public class VenteImageActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
 
             ArrayList<NameValuePair> dataToSend = new ArrayList<>();
-            Log.d("XML", "Mon joli xml : " + xml);
-            dataToSend.add(new BasicNameValuePair("xml" , xml));
+            //Log.d("XML", "Mon joli xml : " + xml);
+
+            dataToSend.add(new BasicNameValuePair("seller" , image.getSeller()));
+            dataToSend.add(new BasicNameValuePair("due_to_seller" , String.valueOf(image.getDueToSeller())));
             dataToSend.add(new BasicNameValuePair("name" , name)) ;
+            dataToSend.add(new BasicNameValuePair("post_current_price" , String.valueOf(image.getCurrentPrice()))) ;
+            dataToSend.add(new BasicNameValuePair("post_min_price" , String.valueOf(image.getMinPrice()))) ;
+            dataToSend.add(new BasicNameValuePair("post_max_price" , String.valueOf(image.getMaxPrice()))) ;
+            Log.d("UPLOAD XML", "name : "+ name + "\n seller : " + image.getSeller() + "\n due_to_seller : "+ String.valueOf(image.getCurrentPrice())+
+                            "\n post_current_price : "+String.valueOf(image.getCurrentPrice())+" \n post_min_price : "+String.valueOf(image.getMinPrice())+
+                    " \n post_max_price : "+String.valueOf(image.getMaxPrice()));
 
             HttpParams httpParams = getHttpParams();
 
             HttpClient client = new DefaultHttpClient(httpParams);
-            HttpPost post = new HttpPost(SERVER_ADDRESS + "uploadXML.php" );
+            HttpPost post = new HttpPost(SERVER_ADDRESS + "altUploadXML.php" );
 
             try{
                 post.setEntity(new UrlEncodedFormEntity(dataToSend));
