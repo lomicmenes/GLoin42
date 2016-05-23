@@ -204,6 +204,7 @@ public class VenteImageActivity extends AppCompatActivity {
 
             HttpClient client = new DefaultHttpClient(httpParams);
             HttpPost post = new HttpPost(SERVER_ADDRESS + "uploadImg.php" );
+            
 
             try{
                 post.setEntity(new UrlEncodedFormEntity(dataToSend));

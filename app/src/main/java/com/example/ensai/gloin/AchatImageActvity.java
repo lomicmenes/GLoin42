@@ -34,6 +34,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class AchatImageActvity extends AppCompatActivity {
 
     ElementDAOSQLite base ;
+    ImageDAOSQLITE baseImage ;
 
     public static final String SERVER_ADRESS = "http://axel-gloin.netai.net/" ;
 
@@ -62,6 +63,7 @@ public class AchatImageActvity extends AppCompatActivity {
             public void run() {
                 base = new ElementDAOSQLite(getApplicationContext());
                 base.changerGloin(pseudo , -prixAchat);
+                baseImage = new ImageDAOSQLITE(getApplicationContext());
                 Log.e("MARCHE AChAT", "c'est juste pour savoir si ca a effectuer ca ");
 
 
@@ -86,15 +88,7 @@ public class AchatImageActvity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.e("downLoad", "On a mal download");
             }
-            try {
-                if (b != null) {
-                    saveImageToGallery(downloadedImage, name.getText().toString(), b);
-                    Toast.makeText(this, "image sauvé en galerie", Toast.LENGTH_SHORT).show();
-                }
-            }
-            catch (Exception e){
-                Log.e("THUG" , "ta pas sauver l'iamge das la galerei");
-            }try {
+           try {
                 Log.d("DOWNLOAD XML", "ça devrait commencer pour le fichier " + nameString + ".xml");
                 new DownloadXML(nameString).execute();
             }catch (Exception e1){
@@ -113,13 +107,13 @@ public class AchatImageActvity extends AppCompatActivity {
     }
 
 
-    private class DownloadImage extends AsyncTask<Void, Void, Bitmap>{
+    public class DownloadImage extends AsyncTask<Void, Void, Bitmap>{
 
-        String name ;
+        String namee ;
        HttpURLConnection connection = null ;
 
-        public DownloadImage(String name ){
-            this.name = name ;
+        public DownloadImage(String namee ){
+            this.namee = namee ;
             Log.i("DOWNLOAD IMAGE", "Le nom de l'image est : "+name);
         }
 
@@ -159,6 +153,17 @@ public class AchatImageActvity extends AppCompatActivity {
             if (bitmap!=null){
                 b = bitmap ;
                 downloadedImage.setImageBitmap(bitmap);
+                try {
+
+                        saveImageToGallery(downloadedImage, name.getText().toString(), b);
+                        Toast.makeText(getApplicationContext(), "image sauvé en galerie", Toast.LENGTH_SHORT).show();
+                        Image imag = new Image(name.getText().toString(), image.getCurrentPrice(), pseudo);
+                        baseImage.ajouterImage(imag);
+
+                }
+                catch (Exception e){
+                    Log.e("THUG" , "ta pas sauver l'iamge das la galerei");
+                }
             }
             else{
                 Toast.makeText(getApplicationContext() , "sorry wrong name try again !  ", Toast.LENGTH_SHORT).show();

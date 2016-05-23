@@ -34,6 +34,7 @@ public class PagePrincipal extends AppCompatActivity {
 
 
 
+
     int gloin =100 ;
     String pseudo;
     @Override
@@ -71,6 +72,9 @@ if (images != null) {
     new MettreAJour().execute();
 }
 
+       //new  MettreAJour().execute() ;
+
+
 
     }
 
@@ -81,6 +85,7 @@ if (images != null) {
         public MettreAJour() {}
 
         private int ajout ;
+        List<Image> images = baseImage.chargerImageDepuisPseudo(pseudo) ;
 
 
 
@@ -97,6 +102,8 @@ if (images != null) {
 
                 // code pour recuperer les donnnees dans le xml
                 for (Image image : images) {
+                    ajout = ajout + image.getPrice(); /*- le truc recuperer  */
+
 
                     String url = AchatImageActvity.SERVER_ADRESS + "/pictures/"+image.getName() +".xml" ;
                     Document doc = null;

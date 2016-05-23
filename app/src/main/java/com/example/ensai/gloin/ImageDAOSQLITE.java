@@ -55,8 +55,8 @@ public class ImageDAOSQLITE extends SQLiteOpenHelper {
             Cursor cursor = getReadableDatabase().rawQuery("SELECT NameImage , Price , PSEUDO FROM IMAGE WHERE pseudo =? ", new String[]{pseudo});
             while (cursor.moveToNext()) {
                 Image image = new Image();
-                image.setPrice(cursor.getInt(1));
                 image.setName(cursor.getString(0));
+                image.setPrice(cursor.getInt(1));
                 image.setPseudo(cursor.getString(2));
 
             /*Toast.makeText(this, ""+element.getPseudo(),Toast.LENGTH_SHORT).show();*/
