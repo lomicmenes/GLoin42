@@ -85,7 +85,7 @@ public class AchatImageActvity extends AppCompatActivity {
     private class DownloadImage extends AsyncTask<Void, Void, Bitmap>{
 
         String name ;
-        URLConnection connection = null ;
+       HttpURLConnection connection = null ;
 
         public DownloadImage(String name ){
             this.name = name ;
@@ -106,13 +106,14 @@ public class AchatImageActvity extends AppCompatActivity {
 
 
 
-
-
                 return BitmapFactory.decodeStream((InputStream) connection.getContent() , null ,null);
 
             }
             catch (Exception e){
                 Log.e("pbl load im", "pbl URL");
+            }
+            finally {
+                connection.disconnect();
             }
 
             return null;
