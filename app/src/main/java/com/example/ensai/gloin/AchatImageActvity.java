@@ -18,10 +18,14 @@ import android.widget.Toast;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.w3c.dom.Document;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Created by ensai on 22/05/16.
@@ -34,6 +38,7 @@ public class AchatImageActvity extends AppCompatActivity {
     ImageView downloadedImage ;
     EditText name ;
     Bitmap b ;
+    Document XMLdoc;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,12 +113,57 @@ public class AchatImageActvity extends AppCompatActivity {
             super.onPostExecute(bitmap);
             if (bitmap!=null){
                 b = bitmap ;
-               downloadedImage.setImageBitmap(bitmap);
+                downloadedImage.setImageBitmap(bitmap);
             }
             else{
                 Toast.makeText(getApplicationContext() , "sorry wrong name try again !  ", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private class DownloadXML extends AsyncTask<Void, Void, Document>{
+
+        String name ;
+
+        public DownloadXML(String name ){
+            this.name = name ;
+        }
+
+        @Override
+        protected Document doInBackground(Void... params) {
+
+            String url = SERVER_ADRESS + "/pictures/"+name +".xml" ;
+
+            try{
+                URLConnection connection = new URL(url).openConnection();
+                connection.setReadTimeout(1000 * 3);
+                connection.setConnectTimeout(1000*3);
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                Document doc = dBuilder.parse((InputStream) connection.getContent());
+
+                return doc;
+
+            }
+            catch (Exception e){
+                Log.e("pbl load im", "pbl URL");
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Document doc) {
+            super.onPostExecute(doc);
+            if (doc!=null){
+                XMLdoc = doc;
+
+            }
+            else{
+                Toast.makeText(getApplicationContext() , "sorry wrong name try again !  ", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
     }
 
 

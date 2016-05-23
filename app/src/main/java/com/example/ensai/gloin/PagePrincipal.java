@@ -45,7 +45,7 @@ public class PagePrincipal extends AppCompatActivity {
         result.setText("vous avez :" + gloin + " Gloins");
 
 
-       new  MettreAJour().execute() ;
+       //new  MettreAJour().execute() ;
 
 
 

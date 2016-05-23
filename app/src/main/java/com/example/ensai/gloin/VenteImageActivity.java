@@ -44,7 +44,7 @@ public class VenteImageActivity extends AppCompatActivity {
 
     private static int RESULT_LOAD_IMG = 1;
 
-    private static final String SERVER_ADDRESS = "http://axel-gloin.netai.net/";
+    public static final String SERVER_ADDRESS = "http://axel-gloin.netai.net/";
     String imgDecodableString;
     ImageView imageToUpLoad ;
     EditText nomImage ;
@@ -138,7 +138,7 @@ public class VenteImageActivity extends AppCompatActivity {
             imageUp.setSeller(pseudo);
             //String imageXml = buildXml();
             try {
-                new UpLoadXML(imageUp, name).execute();
+                new UploadXML(imageUp, name, this).execute();
             }
             catch (Exception e) {
                 Log.e("upLoad", "On a mal upload");
@@ -239,68 +239,7 @@ public class VenteImageActivity extends AppCompatActivity {
         }
     }
 
-    private class UpLoadXML extends AsyncTask< Void , Void , Void >{
 
-        Image image ;
-        String name;
-
-        public UpLoadXML(Image image, String name){
-            this.image =  image;
-            this.name=  name;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
-            //Log.d("XML", "Mon joli xml : " + xml);
-
-            dataToSend.add(new BasicNameValuePair("seller" , image.getSeller()));
-            dataToSend.add(new BasicNameValuePair("due_to_seller" , String.valueOf(image.getDueToSeller())));
-            dataToSend.add(new BasicNameValuePair("name" , name)) ;
-            dataToSend.add(new BasicNameValuePair("post_current_price" , String.valueOf(image.getCurrentPrice()))) ;
-            dataToSend.add(new BasicNameValuePair("post_min_price" , String.valueOf(image.getMinPrice()))) ;
-            dataToSend.add(new BasicNameValuePair("post_max_price" , String.valueOf(image.getMaxPrice()))) ;
-            Log.d("UPLOAD XML", "name : "+ name + "\n seller : " + image.getSeller() + "\n due_to_seller : "+ String.valueOf(image.getCurrentPrice())+
-                            "\n post_current_price : "+String.valueOf(image.getCurrentPrice())+" \n post_min_price : "+String.valueOf(image.getMinPrice())+
-                    " \n post_max_price : "+String.valueOf(image.getMaxPrice()));
-
-            HttpParams httpParams = getHttpParams();
-
-            HttpClient client = new DefaultHttpClient(httpParams);
-            HttpPost post = new HttpPost(SERVER_ADDRESS + "altUploadXML.php" );
-
-            try{
-                post.setEntity(new UrlEncodedFormEntity(dataToSend));
-                Log.d("upload","Va le XML associé à " + name);
-                client.execute(post);
-            }
-            catch(Exception e){
-                Log.e("connection", "pbl de co ");
-            }
-
-
-            return null ;
-
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-            Toast.makeText(getApplicationContext() ," Le XML est uploadé" , Toast.LENGTH_SHORT).show();
-
-
-        }
-
-        private HttpParams getHttpParams() {
-            HttpParams httpParams = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParams, 1000 * 30);
-            HttpConnectionParams.setSoTimeout(httpParams, 1000*30);
-            return httpParams ;
-
-        }
-    }
 
 
 }
