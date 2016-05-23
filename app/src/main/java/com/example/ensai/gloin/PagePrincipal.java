@@ -9,7 +9,17 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Created by ensai on 10/05/16.
@@ -20,7 +30,7 @@ public class PagePrincipal extends AppCompatActivity {
     ElementDAOSQLite base ;
     ImageDAOSQLITE baseImage ;
 
-
+    List<Image> images;
 
 
 
@@ -43,7 +53,9 @@ public class PagePrincipal extends AppCompatActivity {
             @Override
             public void run() {
                 base = new ElementDAOSQLite(getApplicationContext());
+                baseImage = new ImageDAOSQLITE(getApplicationContext());
                 gloin= base.trouverGloin(pseudo);
+                images = baseImage.chargerImageDepuisPseudo(pseudo) ;
                 Log.i("passegloin", ""+gloin ) ;
                 Log.e("MARCHE", "c'est juste pour savoir si ca a effectuer ca ");
 
@@ -55,9 +67,9 @@ public class PagePrincipal extends AppCompatActivity {
 
 
 
-
-       //new  MettreAJour().execute() ;
-
+if (images != null) {
+    new MettreAJour().execute();
+}
 
 
     }
@@ -69,7 +81,7 @@ public class PagePrincipal extends AppCompatActivity {
         public MettreAJour() {}
 
         private int ajout ;
-        List<Image> images = baseImage.chargerImageDepuisPseudo(pseudo) ;
+
 
 
         @Override
@@ -77,19 +89,86 @@ public class PagePrincipal extends AppCompatActivity {
 
 
             ajout = 0;
+            Image downloadedImage = null ;
+
+
             if (images.size()!=0) {
 
 
                 // code pour recuperer les donnnees dans le xml
                 for (Image image : images) {
-                    ajout = ajout + image.getPrice(); /*- le truc recuperer  */
-                }
+
+                    String url = AchatImageActvity.SERVER_ADRESS + "/pictures/"+image.getName() +".xml" ;
+                    Document doc = null;
+                    HttpURLConnection connection=null;
+                    try{
+                        connection = (HttpURLConnection) new URL(url).openConnection();
+                        connection.setReadTimeout(1000 * 10);
+                        connection.setConnectTimeout(1000*10);
+                        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                        InputStream is = (InputStream) connection.getContent();
+                        try {
+                            doc = dBuilder.parse(is);
+                        }catch(IOException e){
+                            Log.e("DOWNLOAD XML",e.getMessage());
+                        }
+                        boolean isEmpty = (doc==null);
+                        Log.d("DOWNLOAD XML", "Mon doc est-il vide ?" + isEmpty);
+
+
+                    }
+                    catch (Exception e){
+                        Log.e("pbl load im", "pbl URL");
+                    }finally {
+                        if(connection!=null){
+                            connection.disconnect();
+                        }
+                    }
+                    try {
+                        NodeList sellerNode = doc.getElementsByTagName("seller");
+                        String seller = sellerNode.item(0).getTextContent();
+                        Log.d("XMLParsing", "Nom du vendeur : " + seller);
+                        NodeList titleNode = doc.getElementsByTagName("title");
+                        String title = titleNode.item(0).getTextContent();
+                        Log.d("XMLParsing", "Nom de l'image : " + title);
+                        NodeList profitNode = doc.getElementsByTagName("profit");
+                        int profit = Integer.valueOf(profitNode.item(0).getTextContent());
+                        Log.d("XMLParsing", "Profit désiré : " + profit);
+                        NodeList minPriceNode = doc.getElementsByTagName("minPrice");
+                        int minPrice = Integer.valueOf(minPriceNode.item(0).getTextContent());
+                        Log.d("XMLParsing", "Prix min: " + minPrice);
+                        NodeList maxPriceNode = doc.getElementsByTagName("maxPrice");
+                        int maxPrice = Integer.valueOf(maxPriceNode.item(0).getTextContent());
+                        Log.d("XMLParsing", "Prix max: " + maxPrice);
+                        NodeList currentPriceNode = doc.getElementsByTagName("currentPrice");
+                        int currentPrice = Integer.valueOf(currentPriceNode.item(0).getTextContent());
+                        Log.d("XMLParsing", "Prix courant: " + currentPrice);
+                        NodeList nbBuyerNode = doc.getElementsByTagName("nbBuyer");
+                        int nbBuyer = Integer.valueOf(nbBuyerNode.item(0).getTextContent());
+                        Log.d("XMLParsing", "Nombre d'acheteur: " + nbBuyer);
+                        NodeList dueToSellerNode = doc.getElementsByTagName("dueToSeller");
+                        int dueToSeller = Integer.valueOf(dueToSellerNode.item(0).getTextContent());
+                        Log.d("XMLParsing", "Dû au vendeur : " + dueToSeller);
+                        downloadedImage = new Image(title, seller, profit,minPrice,maxPrice,currentPrice,nbBuyer,dueToSeller  );
+                        //Log.d("XMLParsing","\n prix courant : " + currentPrice);
+
+                }catch (Exception e){
+                        Log.e("ATG", e.getMessage());
+                    }
+                    if (downloadedImage.getCurrentPrice()!= 0) {
+
+                        ajout = ajout + image.getPrice() - downloadedImage.getCurrentPrice();
+                        Log.e("thug" , "ajout quon fait "+ ajout ) ;
+                    }
 
             }
 
 
-            return ajout;
+
                 
+        }
+            return ajout;
         }
 
         @Override

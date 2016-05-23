@@ -35,7 +35,7 @@ public class AchatImageActvity extends AppCompatActivity {
 
     ElementDAOSQLite base ;
 
-    private static final String SERVER_ADRESS = "http://axel-gloin.netai.net/" ;
+    public static final String SERVER_ADRESS = "http://axel-gloin.netai.net/" ;
 
 
     ImageView downloadedImage ;
@@ -145,7 +145,9 @@ public class AchatImageActvity extends AppCompatActivity {
                 Log.e("pbl load im", "pbl URL");
             }
             finally {
-                connection.disconnect();
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
 
             return null;
@@ -178,9 +180,9 @@ public class AchatImageActvity extends AppCompatActivity {
 
             String url = SERVER_ADRESS + "/pictures/"+name +".xml" ;
             Document doc = null;
-
+            HttpURLConnection connection=null;
             try{
-                URLConnection connection = new URL(url).openConnection();
+                connection = (HttpURLConnection) new URL(url).openConnection();
                 connection.setReadTimeout(1000 * 10);
                 connection.setConnectTimeout(1000*10);
                 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -191,7 +193,6 @@ public class AchatImageActvity extends AppCompatActivity {
                 }catch(IOException e){
                     Log.e("DOWNLOAD XML",e.getMessage());
                 }
-                is.close();
                 boolean isEmpty = (doc==null);
                 Log.d("DOWNLOAD XML", "Mon doc est-il vide ?" + isEmpty);
 
@@ -199,6 +200,10 @@ public class AchatImageActvity extends AppCompatActivity {
             }
             catch (Exception e){
                 Log.e("pbl load im", "pbl URL");
+            }finally {
+                if(connection!=null){
+                    connection.disconnect();
+                }
             }
 
             return doc;

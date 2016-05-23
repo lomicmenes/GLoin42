@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by ensai on 23/05/16.
@@ -50,17 +51,25 @@ public class ImageDAOSQLITE extends SQLiteOpenHelper {
 
     public List<Image> chargerImageDepuisPseudo( String pseudo) {
         List<Image> images = new ArrayList<Image>();
-        Cursor cursor = getReadableDatabase().rawQuery("SELECT NameImage , Price , PSEUDO FROM IMAGE WHERE pseudo =? ", new String [] {pseudo});
-        while (cursor.moveToNext()) {
-            Image image = new Image();
-            image.setPrice(cursor.getInt(1));
-            image.setName(cursor.getString(0));
-            image.setPseudo(cursor.getString(2));
+        try {
+            Cursor cursor = getReadableDatabase().rawQuery("SELECT NameImage , Price , PSEUDO FROM IMAGE WHERE pseudo =? ", new String[]{pseudo});
+            while (cursor.moveToNext()) {
+                Image image = new Image();
+                image.setPrice(cursor.getInt(1));
+                image.setName(cursor.getString(0));
+                image.setPseudo(cursor.getString(2));
 
             /*Toast.makeText(this, ""+element.getPseudo(),Toast.LENGTH_SHORT).show();*/
-            Log.i("TAG", "Pseudo " + image.getPseudo() + " nom de l'image " + image.getName());
+                Log.i("TAG", "Pseudo " + image.getPseudo() + " nom de l'image " + image.getName());
+            }
+            cursor.close();
+        }catch (Exception e){
+            Log.e("thug", " il a rien dans la base ");
+
         }
-        cursor.close();
+
+
+
 
         return images;
     }
