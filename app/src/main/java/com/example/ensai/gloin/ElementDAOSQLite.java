@@ -17,7 +17,7 @@ public class ElementDAOSQLite extends SQLiteOpenHelper  {
 
     private static final int DATA_BASE_VERSION = 1 ;
     private static final String DATA_BASE_NAME ="MA BASE " ;
-    SQLiteDatabase db ;
+
 
     public ElementDAOSQLite(Context context) {
         super(context, DATA_BASE_NAME, null, DATA_BASE_VERSION);

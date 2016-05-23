@@ -57,8 +57,10 @@ public class AchatImageActvity extends AppCompatActivity {
                 Log.e("downLoad", "On a mal download");
             }
             try {
-                saveImageToGallery(downloadedImage , name.getText().toString(), b);
-                Toast.makeText(this ,"image sauvé en galerie", Toast.LENGTH_SHORT).show();
+                if (b != null) {
+                    saveImageToGallery(downloadedImage, name.getText().toString(), b);
+                    Toast.makeText(this, "image sauvé en galerie", Toast.LENGTH_SHORT).show();
+                }
             }
             catch (Exception e){
                 Log.e("THUG" , "ta pas sauver l'iamge das la galerei");

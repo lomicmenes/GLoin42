@@ -1,6 +1,7 @@
 package com.example.ensai.gloin;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,6 +18,8 @@ public class PagePrincipal extends AppCompatActivity {
 
 
     ElementDAOSQLite base ;
+    ImageDAOSQLITE baseImage ;
+
 
 
 
@@ -40,7 +43,60 @@ public class PagePrincipal extends AppCompatActivity {
 
         TextView result = (TextView) findViewById(R.id.nbrGloin);
         result.setText("vous avez :" + gloin + " Gloins");
+
+
+       new  MettreAJour().execute() ;
+
+
+
     }
+
+
+    private class MettreAJour extends AsyncTask < Void , Void , Integer    > {
+
+
+        public MettreAJour() {}
+
+        private int ajout ;
+        List<Image> images = baseImage.chargerImageDepuisPseudo(pseudo) ;
+
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+
+            ajout = 0 ;
+
+            // code pour recuperer les donnnees dans le xml
+            for (Image image : images){
+                ajout  = ajout +image.getPrice() ; /*- le truc recuperer  */
+            }
+
+
+
+
+            return ajout;
+        }
+
+        @Override
+        protected void onPostExecute(Integer ajout ) {
+            super.onPostExecute(ajout);
+
+            if (ajout !=0){
+                base.changerGloin(pseudo ,ajout);
+                Toast.makeText(getApplicationContext() ,"Vous avez gagné :" + ajout + " Gloin ",Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+    }
+
+
+
+
+
+
+
+
 
 
     public void acheter (View v) {

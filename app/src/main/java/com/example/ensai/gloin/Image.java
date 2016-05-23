@@ -26,6 +26,14 @@ public class Image {
     private int nbBuyer = 0;
     private int dueToSeller = 0;
 
+
+
+    private int price ;
+
+
+
+    private  String  pseudo ;
+
     public Image(String name,int profit, int minPrice, int maxPrice){
         super();
         this.name=name;
@@ -34,6 +42,19 @@ public class Image {
         this.maxPrice=maxPrice;
         this.currentPrice=maxPrice;
     }
+
+
+    public Image(String name , int currentPrice , String pseudo){
+        this.name  = name ;
+        this.price = currentPrice ;
+        this.pseudo = pseudo ;
+    };
+    public Image(){
+
+    }
+
+
+
 
     public String getImage() {
         return image;
@@ -108,5 +129,18 @@ public class Image {
         this.profit = profit;
     }
 
+    public String getPseudo() {
+        return pseudo;
+    }
 
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
+    }
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
 }
