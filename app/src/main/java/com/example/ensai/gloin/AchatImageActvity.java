@@ -3,7 +3,6 @@ package com.example.ensai.gloin;
 import android.Manifest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,13 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -33,10 +32,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
  */
 public class AchatImageActvity extends AppCompatActivity {
 
+    ElementDAOSQLite base ;
+
     private static final String SERVER_ADRESS = "http://axel-gloin.netai.net/" ;
 
 
     ImageView downloadedImage ;
+    Image image;
     EditText name ;
     Bitmap b ;
     Document XMLdoc;
@@ -49,16 +51,33 @@ public class AchatImageActvity extends AppCompatActivity {
 
         downloadedImage = (ImageView) findViewById(R.id.imgView);
 
+//        Runnable code = new Runnable() {
+//            @Override
+//            public void run() {
+//                base = new ElementDAOSQLite(getApplicationContext());
+//                base.changerGloin(pseudo , ajout);
+//                Log.e("MARCHE AChAT", "c'est juste pour savoir si ca a effectuer ca ");
+//
+//
+//            }
+//        };
+//        new Thread(code).start();
+
+
+
+
+
     }
 
 
     public void acheterImage(View v) {
         name = (EditText) findViewById(R.id.nomImage);
-        if (!(name.getText().toString().equals(""))) {
+        String nameString = name.getText().toString();
+        if (!(nameString.equals(""))) {
 
 
             try {
-                new DownloadImage(name.getText().toString()).execute();
+                new DownloadImage(nameString).execute();
             } catch (Exception e) {
                 Log.e("downLoad", "On a mal download");
             }
@@ -70,7 +89,14 @@ public class AchatImageActvity extends AppCompatActivity {
             }
             catch (Exception e){
                 Log.e("THUG" , "ta pas sauver l'iamge das la galerei");
+            }try {
+                Log.d("DOWNLOAD XML", "ça devrait commencer pour le fichier " + nameString + ".xml");
+                new DownloadXML(nameString).execute();
+            }catch (Exception e1){
+                Log.e("DOWNLOAD XML", e1.getMessage());
             }
+
+
 
         } else {
             Toast.makeText(this, " SI TU METS PAS DE NOM CA VA PAS MARCHE BANANE !", Toast.LENGTH_SHORT).show();
@@ -89,6 +115,7 @@ public class AchatImageActvity extends AppCompatActivity {
 
         public DownloadImage(String name ){
             this.name = name ;
+            Log.i("DOWNLOAD IMAGE", "Le nom de l'image est : "+name);
         }
 
         @Override
@@ -145,30 +172,80 @@ public class AchatImageActvity extends AppCompatActivity {
         protected Document doInBackground(Void... params) {
 
             String url = SERVER_ADRESS + "/pictures/"+name +".xml" ;
+            Document doc = null;
 
             try{
                 URLConnection connection = new URL(url).openConnection();
-                connection.setReadTimeout(1000 * 3);
-                connection.setConnectTimeout(1000*3);
+                connection.setReadTimeout(1000 * 10);
+                connection.setConnectTimeout(1000*10);
                 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                Document doc = dBuilder.parse((InputStream) connection.getContent());
+                InputStream is = (InputStream) connection.getContent();
+                try {
+                    doc = dBuilder.parse(is);
+                }catch(IOException e){
+                    Log.e("DOWNLOAD XML",e.getMessage());
+                }
+                is.close();
+                boolean isEmpty = (doc==null);
+                Log.d("DOWNLOAD XML", "Mon doc est-il vide ?" + isEmpty);
 
-                return doc;
 
             }
             catch (Exception e){
                 Log.e("pbl load im", "pbl URL");
             }
-            return null;
+
+            return doc;
         }
 
         @Override
         protected void onPostExecute(Document doc) {
             super.onPostExecute(doc);
-            if (doc!=null){
-                XMLdoc = doc;
 
+            if (doc!=null) {
+                XMLdoc = doc;
+                Log.d("DOWNLOAD", "Début de la post execution");
+                try {
+                    NodeList sellerNode = doc.getElementsByTagName("seller");
+                    String seller = sellerNode.item(0).getTextContent();
+                    Log.d("XMLParsing", "Nom du vendeur : " + seller);
+                    NodeList titleNode = doc.getElementsByTagName("title");
+                    String title = titleNode.item(0).getTextContent();
+                    Log.d("XMLParsing", "Nom de l'image : " + title);
+                    NodeList profitNode = doc.getElementsByTagName("profit");
+                    int profit = Integer.valueOf(profitNode.item(0).getTextContent());
+                    Log.d("XMLParsing", "Profit désiré : " + profit);
+                    NodeList minPriceNode = doc.getElementsByTagName("minPrice");
+                    int minPrice = Integer.valueOf(minPriceNode.item(0).getTextContent());
+                    Log.d("XMLParsing", "Prix min: " + minPrice);
+                    NodeList maxPriceNode = doc.getElementsByTagName("maxPrice");
+                    int maxPrice = Integer.valueOf(maxPriceNode.item(0).getTextContent());
+                    Log.d("XMLParsing", "Prix max: " + maxPrice);
+                    NodeList currentPriceNode = doc.getElementsByTagName("currentPrice");
+                    int currentPrice = Integer.valueOf(currentPriceNode.item(0).getTextContent());
+                    Log.d("XMLParsing", "Prix courant: " + currentPrice);
+                    NodeList nbBuyerNode = doc.getElementsByTagName("nbBuyer");
+                    int nbBuyer = Integer.valueOf(nbBuyerNode.item(0).getTextContent());
+                    Log.d("XMLParsing", "Nombre d'acheteur: " + nbBuyer);
+                    NodeList dueToSellerNode = doc.getElementsByTagName("dueToSeller");
+                    int dueToSeller = Integer.valueOf(dueToSellerNode.item(0).getTextContent());
+                    Log.d("XMLParsing", "Dû au vendeur : " + dueToSeller);
+                    image = new Image(title, seller, profit,minPrice,maxPrice,currentPrice,nbBuyer,dueToSeller  );
+                    //Log.d("XMLParsing","\n prix courant : " + currentPrice);
+                    Image upDatedImage = image.clone();
+                    upDatedImage.update();
+
+                    try {
+                        new UploadXML(upDatedImage, upDatedImage.getName()).execute();
+                    }
+                    catch (Exception e) {
+                        Log.e("upLoad", "On a mal upload");
+                    }
+
+                } catch (NullPointerException e1) {
+                    Log.e("DOWNLOAD XML", e1.getMessage());
+                }
             }
             else{
                 Toast.makeText(getApplicationContext() , "sorry wrong name try again !  ", Toast.LENGTH_SHORT).show();

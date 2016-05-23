@@ -1,8 +1,6 @@
 package com.example.ensai.gloin;
 
 import android.Manifest;
-import android.app.DownloadManager;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -138,7 +136,7 @@ public class VenteImageActivity extends AppCompatActivity {
             imageUp.setSeller(pseudo);
             //String imageXml = buildXml();
             try {
-                new UploadXML(imageUp, name, this).execute();
+                new UploadXML(imageUp, name).execute();
             }
             catch (Exception e) {
                 Log.e("upLoad", "On a mal upload");

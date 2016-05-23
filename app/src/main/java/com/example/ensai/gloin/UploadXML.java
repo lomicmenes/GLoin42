@@ -24,12 +24,12 @@ public class UploadXML extends AsyncTask< Void , Void , Void > {
 
     Image image ;
     String name;
-    Context context;
+    //Context context;
 
-    public UploadXML(Image image, String name, Context context){
+    public UploadXML(Image image, String name){
         this.image =  image;
         this.name=  name;
-        this.context=context;
+        //this.context=context;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class UploadXML extends AsyncTask< Void , Void , Void > {
         dataToSend.add(new BasicNameValuePair("post_current_price" , String.valueOf(image.getCurrentPrice()))) ;
         dataToSend.add(new BasicNameValuePair("post_min_price" , String.valueOf(image.getMinPrice()))) ;
         dataToSend.add(new BasicNameValuePair("post_max_price" , String.valueOf(image.getMaxPrice()))) ;
-        Log.d("UPLOAD XML", "name : " + name + "\n seller : " + image.getSeller() + "\n due_to_seller : " + String.valueOf(image.getCurrentPrice()) +
+        Log.d("UPLOAD XML", "name : " + name + "\n seller : " + image.getSeller() + "\n due_to_seller : " + String.valueOf(image.getDueToSeller()) +
                 "\n post_current_price : " + String.valueOf(image.getCurrentPrice()) + " \n post_min_price : " + String.valueOf(image.getMinPrice()) +
                 " \n post_max_price : " + String.valueOf(image.getMaxPrice()) +
                 " \n post_profit : " + String.valueOf(image.getProfit()));
@@ -74,7 +74,7 @@ public class UploadXML extends AsyncTask< Void , Void , Void > {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        Toast.makeText(context.getApplicationContext(), " Le XML est uploadé", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context.getApplicationContext(), " Le XML est uploadé", Toast.LENGTH_SHORT).show();
 
 
     }

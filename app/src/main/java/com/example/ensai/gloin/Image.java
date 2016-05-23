@@ -43,13 +43,54 @@ public class Image {
         this.currentPrice=maxPrice;
     }
 
+    public Image(String name,String seller, int profit, int minPrice, int maxPrice, int currentPrice, int nbBuyer, int dueToSeller){
+        this.name=name;
+        this.seller = seller;
+        this.profit=profit;
+        this.minPrice=minPrice;
+        this.maxPrice=maxPrice;
+        this.currentPrice=currentPrice;
+        this.nbBuyer=nbBuyer;
+        this.dueToSeller=dueToSeller;
+    }
+
 
     public Image(String name , int currentPrice , String pseudo){
         this.name  = name ;
         this.price = currentPrice ;
         this.pseudo = pseudo ;
     };
+
     public Image(){
+
+    }
+
+    public Image clone(){
+        Image image = new Image(this.name, this.seller, this.profit,this.minPrice,this.maxPrice,this.currentPrice,this.nbBuyer,this.dueToSeller);
+        return image;
+    }
+
+    public void update(){
+        nbBuyer++;
+        int lastPrice=currentPrice;
+        updateCurrentPrice();
+        updateDueToSeller(lastPrice);
+    }
+
+    private void updateCurrentPrice(){
+        if((nbBuyer+1)*currentPrice>profit){
+            currentPrice=Math.max(profit/nbBuyer,minPrice);
+        }
+    }
+
+    /**
+     * Met à jour le profit reél du vendeur
+     * Doit être utilisé après la mise à jour du nombre d'acheteur
+     * Utilise le dernier prix.
+     * @param lastPrice
+     */
+    private void updateDueToSeller(int lastPrice){
+        dueToSeller+=currentPrice*nbBuyer-lastPrice*(nbBuyer-1);
 
     }
 
