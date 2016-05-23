@@ -51,10 +51,6 @@ public class MainActivity extends AppCompatActivity {
     public void enregistrement(View v) {
         Intent intent = new Intent(this, Enregistrement.class);
         startActivity(intent);
-
-
-
-
     }
 
 

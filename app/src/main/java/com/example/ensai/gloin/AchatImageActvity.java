@@ -1,6 +1,7 @@
 package com.example.ensai.gloin;
 
 import android.Manifest;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -42,6 +43,9 @@ public class AchatImageActvity extends AppCompatActivity {
     EditText name ;
     Bitmap b ;
     Document XMLdoc;
+    String pseudo;
+    int prixAchat = 0;
+    Runnable code;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +54,19 @@ public class AchatImageActvity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
         downloadedImage = (ImageView) findViewById(R.id.imgView);
+        Intent intent = getIntent();
+        pseudo = intent.getStringExtra("pseudo");
 
-//        Runnable code = new Runnable() {
-//            @Override
-//            public void run() {
-//                base = new ElementDAOSQLite(getApplicationContext());
-//                base.changerGloin(pseudo , ajout);
-//                Log.e("MARCHE AChAT", "c'est juste pour savoir si ca a effectuer ca ");
-//
-//
-//            }
-//        };
-//        new Thread(code).start();
+        code = new Runnable() {
+            @Override
+            public void run() {
+                base = new ElementDAOSQLite(getApplicationContext());
+                base.changerGloin(pseudo , -prixAchat);
+                Log.e("MARCHE AChAT", "c'est juste pour savoir si ca a effectuer ca ");
+
+
+            }
+        };
 
 
 
@@ -235,6 +240,8 @@ public class AchatImageActvity extends AppCompatActivity {
                     //Log.d("XMLParsing","\n prix courant : " + currentPrice);
                     Image upDatedImage = image.clone();
                     upDatedImage.update();
+                    prixAchat=currentPrice;
+                    new Thread(code).start();
 
                     try {
                         new UploadXML(upDatedImage, upDatedImage.getName()).execute();
