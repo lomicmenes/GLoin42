@@ -22,13 +22,13 @@ public class ImageDAOSQLITE extends SQLiteOpenHelper {
 
 
 
-    public   ImageDAOSQLITE(Context context){
+    public ImageDAOSQLITE(Context context){
         super(context, DATA_BASE_NAME, null, DATA_BASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IMAGE (Nom NameImage TEXT PRIMARY KEY , Price INTEGER , PSEUDO TEXT  )");
+        db.execSQL("CREATE TABLE IMAGE (ImageName TEXT PRIMARY KEY , Price INTEGER , PSEUDO TEXT  )");
 
     }
 
@@ -41,30 +41,35 @@ public class ImageDAOSQLITE extends SQLiteOpenHelper {
 
 
 
-    public void ajouterImage(Image image) {
+    public void ajouterImage(String name, int price, String pseudo) {
+        Log.i("IMAGE META", "On ajoute une image dans SQLITE");
+        Log.d("IMAGE META VALEURS", "Prix : "+ price);
         ContentValues values = new ContentValues();
-        values.put("NameImage" ,image.getName());
-        values.put("CurrentPrice" ,image.getCurrentPrice());
-        values.put("pseudo", image.getPseudo());
+        values.put("ImageName" ,name);
+        values.put("Price" ,(Integer) price);
+        values.put("pseudo", pseudo);
         getWritableDatabase().insert("IMAGE", null, values);
     }
 
-    public List<Image> chargerImageDepuisPseudo( String pseudo) {
+    public List<Image> chargerImagesDepuisPseudo(String pseudo) {
+        Log.d("IMAGEDAO", "On tente de charger les metadonnées internes sur les images");
         List<Image> images = new ArrayList<Image>();
         try {
-            Cursor cursor = getReadableDatabase().rawQuery("SELECT NameImage , Price , PSEUDO FROM IMAGE WHERE pseudo =? ", new String[]{pseudo});
+            Cursor cursor = getReadableDatabase().rawQuery("SELECT ImageName,  Price , PSEUDO FROM IMAGE WHERE pseudo =? ", new String[]{pseudo});
             while (cursor.moveToNext()) {
+                Log.i("RETOUR GLOIN", "Passage effectif dans la base image pour récupérer la liste des images");
                 Image image = new Image();
                 image.setName(cursor.getString(0));
                 image.setPrice(cursor.getInt(1));
                 image.setPseudo(cursor.getString(2));
+                images.add(image);
 
             /*Toast.makeText(this, ""+element.getPseudo(),Toast.LENGTH_SHORT).show();*/
                 Log.i("TAG", "Pseudo " + image.getPseudo() + " nom de l'image " + image.getName());
             }
             cursor.close();
         }catch (Exception e){
-            Log.e("thug", " il a rien dans la base ");
+            Log.e("thug", " il a rien dans la base "+e.getMessage());
 
         }
 
@@ -76,7 +81,7 @@ public class ImageDAOSQLITE extends SQLiteOpenHelper {
 
 
     public  void UpdatePrice (String nameImage , String pseudo, int newPrice){
-        getWritableDatabase().execSQL(" UPDATE IMAGE SET PRICE  = " + newPrice + " WHERE PSEUDO = ? and NameImage = ?  ;", new String[]{ pseudo , nameImage});
+        getWritableDatabase().execSQL(" UPDATE IMAGE SET PRICE  = " + newPrice + " WHERE PSEUDO = ? and ImageName = ?  ;", new String[]{ pseudo , nameImage});
     }
 
 

@@ -54,6 +54,7 @@ public class AchatImageActvity extends AppCompatActivity {
         setContentView(R.layout.activity_achat_image);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
+        baseImage = new ImageDAOSQLITE(getApplicationContext());
         downloadedImage = (ImageView) findViewById(R.id.imgView);
         Intent intent = getIntent();
         pseudo = intent.getStringExtra("pseudo");
@@ -63,7 +64,6 @@ public class AchatImageActvity extends AppCompatActivity {
             public void run() {
                 base = new ElementDAOSQLite(getApplicationContext());
                 base.changerGloin(pseudo , -prixAchat);
-                baseImage = new ImageDAOSQLITE(getApplicationContext());
                 Log.e("MARCHE AChAT", "c'est juste pour savoir si ca a effectuer ca ");
 
 
@@ -102,25 +102,25 @@ public class AchatImageActvity extends AppCompatActivity {
         }
     }
     private void saveImageToGallery(ImageView imageView , String name ,  Bitmap b){
+        Log.i("IMAGE", "On sauve l'image dans la gallery");
         imageView.setDrawingCacheEnabled(true);
         MediaStore.Images.Media.insertImage(this.getContentResolver(), b,name , "description");
     }
 
 
     public class DownloadImage extends AsyncTask<Void, Void, Bitmap>{
-
         String namee ;
        HttpURLConnection connection = null ;
 
         public DownloadImage(String namee ){
             this.namee = namee ;
-            Log.i("DOWNLOAD IMAGE", "Le nom de l'image est : "+name);
+            Log.i("DOWNLOAD IMAGE", "Le nom de l'image est : "+namee);
         }
 
         @Override
         protected Bitmap doInBackground(Void... params) {
 
-            String url = SERVER_ADRESS + "/pictures/"+name +".JPG" ;
+            String url = SERVER_ADRESS + "/pictures/"+namee +".JPG" ;
 
             try{
                 URL ad = new URL(url);
@@ -156,13 +156,12 @@ public class AchatImageActvity extends AppCompatActivity {
                 try {
 
                         saveImageToGallery(downloadedImage, name.getText().toString(), b);
-                        Toast.makeText(getApplicationContext(), "image sauvé en galerie", Toast.LENGTH_SHORT).show();
-                        Image imag = new Image(name.getText().toString(), image.getCurrentPrice(), pseudo);
-                        baseImage.ajouterImage(imag);
+                        Toast.makeText(getApplicationContext(), "image sauvée en galerie", Toast.LENGTH_SHORT).show();
+
 
                 }
                 catch (Exception e){
-                    Log.e("THUG" , "ta pas sauver l'iamge das la galerei");
+                    Log.e("THUG" , "Tu n'as pas sauver l'image das la galerie");
                 }
             }
             else{
@@ -248,6 +247,13 @@ public class AchatImageActvity extends AppCompatActivity {
                     Log.d("XMLParsing", "Dû au vendeur : " + dueToSeller);
                     image = new Image(title, seller, profit,minPrice,maxPrice,currentPrice,nbBuyer,dueToSeller  );
                     //Log.d("XMLParsing","\n prix courant : " + currentPrice);
+                    Log.d("SAUVER IMAGE","On essaye...");
+                    Log.d("META IMAGE","Titre : "+ title + " prix : " + currentPrice + " pseudo : "+ pseudo);
+                    try{
+                        baseImage.ajouterImage(title, currentPrice, pseudo);
+                    }catch(NullPointerException e){
+                        Log.e("BORDEL", e.getMessage());
+                    }
                     Image upDatedImage = image.clone();
                     upDatedImage.update();
                     prixAchat=currentPrice;

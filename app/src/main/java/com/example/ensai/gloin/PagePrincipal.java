@@ -56,23 +56,24 @@ public class PagePrincipal extends AppCompatActivity {
                 base = new ElementDAOSQLite(getApplicationContext());
                 baseImage = new ImageDAOSQLITE(getApplicationContext());
                 gloin= base.trouverGloin(pseudo);
-                images = baseImage.chargerImageDepuisPseudo(pseudo) ;
+                images = baseImage.chargerImagesDepuisPseudo(pseudo) ;
                 Log.i("passegloin", ""+gloin ) ;
-                Log.e("MARCHE", "c'est juste pour savoir si ca a effectuer ca ");
-
+                Log.i("THREAD", "C'est juste pour savoir si on empêche les frames de sauter ");
+                for (Image image : images) {
+                    Log.i("thug", "images en base " + image.getName()+ " price "+ image.getCurrentPrice());
+                }
                 TextView result = (TextView) findViewById(R.id.nbrGloin);
-                result.setText("vous avez :" + gloin + " Gloins");
+                result.setText("Vous avez :" + gloin + " Gloins");
             }
         };
         new Thread(code).start();
 
+        if (images != null) {
+            Log.d("GLOINS", "On fait une mise à jour");
+            new MettreAJour().execute();
+        }
 
-
-if (images != null) {
-    new MettreAJour().execute();
-}
-
-       //new  MettreAJour().execute() ;
+        //new  MettreAJour().execute() ;
 
 
 
@@ -84,8 +85,7 @@ if (images != null) {
 
         public MettreAJour() {}
 
-        private int ajout ;
-        List<Image> images = baseImage.chargerImageDepuisPseudo(pseudo) ;
+        private int ajout;
 
 
 
@@ -98,6 +98,7 @@ if (images != null) {
 
 
             if (images.size()!=0) {
+                Log.i("RETOUR GLOIN", "On a des images en base");
 
 
                 // code pour recuperer les donnnees dans le xml
@@ -160,21 +161,21 @@ if (images != null) {
                         downloadedImage = new Image(title, seller, profit,minPrice,maxPrice,currentPrice,nbBuyer,dueToSeller  );
                         //Log.d("XMLParsing","\n prix courant : " + currentPrice);
 
-                }catch (Exception e){
+                    }catch (Exception e){
                         Log.e("ATG", e.getMessage());
                     }
                     if (downloadedImage.getCurrentPrice()!= 0) {
 
                         ajout = ajout + image.getPrice() - downloadedImage.getCurrentPrice();
-                        Log.e("thug" , "ajout quon fait "+ ajout ) ;
+                        Log.d("thug" , "ajout qu'on fait "+ ajout ) ;
                     }
 
+                }
+
+
+
+
             }
-
-
-
-                
-        }
             return ajout;
         }
 
