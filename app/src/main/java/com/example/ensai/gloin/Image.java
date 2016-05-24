@@ -79,7 +79,8 @@ public class Image {
 
     private void updateCurrentPrice(){
         if((nbBuyer+1)*currentPrice>profit){
-            currentPrice=Math.max(profit/nbBuyer,minPrice);
+            int candidatePrice =Math.max(profit/nbBuyer,minPrice);
+            currentPrice = Math.min(maxPrice, candidatePrice);
         }
     }
 

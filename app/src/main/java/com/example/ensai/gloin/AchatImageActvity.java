@@ -2,6 +2,7 @@ package com.example.ensai.gloin;
 
 import android.Manifest;
 import android.content.Intent;
+import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -253,7 +254,11 @@ public class AchatImageActvity extends AppCompatActivity {
                         baseImage.ajouterImage(title, currentPrice, pseudo);
                     }catch(NullPointerException e){
                         Log.e("BORDEL", e.getMessage());
+                    }catch(SQLiteConstraintException e1){
+                        Log.e("SQLite", e1.getMessage());
+                        Toast.makeText(getApplicationContext() , "L'image est déjà achetée", Toast.LENGTH_SHORT).show();
                     }
+                    //Il faudra conditionner l'update de l'image à la réussite de la mise en base de l'image
                     Image upDatedImage = image.clone();
                     upDatedImage.update();
                     prixAchat=currentPrice;
@@ -275,10 +280,7 @@ public class AchatImageActvity extends AppCompatActivity {
             }
         }
 
-
     }
-
-
 
 }
 

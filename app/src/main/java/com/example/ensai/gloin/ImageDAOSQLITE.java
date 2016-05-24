@@ -3,6 +3,7 @@ package com.example.ensai.gloin;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -41,14 +42,15 @@ public class ImageDAOSQLITE extends SQLiteOpenHelper {
 
 
 
-    public void ajouterImage(String name, int price, String pseudo) {
+    public void ajouterImage(String name, int price, String pseudo) throws SQLiteConstraintException{
         Log.i("IMAGE META", "On ajoute une image dans SQLITE");
         Log.d("IMAGE META VALEURS", "Prix : "+ price);
         ContentValues values = new ContentValues();
         values.put("ImageName" ,name);
-        values.put("Price" ,(Integer) price);
+        values.put("Price" , price);
         values.put("pseudo", pseudo);
-        getWritableDatabase().insert("IMAGE", null, values);
+            getWritableDatabase().insert("IMAGE", null, values);
+
     }
 
     public List<Image> chargerImagesDepuisPseudo(String pseudo) {
@@ -65,7 +67,7 @@ public class ImageDAOSQLITE extends SQLiteOpenHelper {
                 images.add(image);
 
             /*Toast.makeText(this, ""+element.getPseudo(),Toast.LENGTH_SHORT).show();*/
-                Log.i("TAG", "Pseudo " + image.getPseudo() + " nom de l'image " + image.getName());
+                Log.i("TAG", "Pseudo " + image.getPseudo() + " nom de l'image " + image.getName() + " prix : " +image.getPrice());
             }
             cursor.close();
         }catch (Exception e){

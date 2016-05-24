@@ -42,12 +42,9 @@ public class PagePrincipal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
 
-
         Intent intent = getIntent();
         pseudo = intent.getStringExtra("pseudo");
         Log.i("passeINfo", pseudo) ;
-
-
 
 
         Runnable code = new Runnable() {
@@ -56,38 +53,33 @@ public class PagePrincipal extends AppCompatActivity {
                 base = new ElementDAOSQLite(getApplicationContext());
                 baseImage = new ImageDAOSQLITE(getApplicationContext());
                 gloin= base.trouverGloin(pseudo);
-                images = baseImage.chargerImagesDepuisPseudo(pseudo) ;
+                images = baseImage.chargerImagesDepuisPseudo(pseudo);
                 Log.i("passegloin", ""+gloin ) ;
                 Log.i("THREAD", "C'est juste pour savoir si on empêche les frames de sauter ");
                 for (Image image : images) {
-                    Log.i("thug", "images en base " + image.getName()+ " price "+ image.getCurrentPrice());
+                    Log.i("thug", "images en base " + image.getName()+ " price "+ image.getPrice());
+
                 }
                 TextView result = (TextView) findViewById(R.id.nbrGloin);
                 result.setText("Vous avez :" + gloin + " Gloins");
+
+                if (images != null) {
+                    Log.d("GLOINS", "On fait une mise à jour");
+                    new MettreAJour().execute();
+                }
             }
         };
         new Thread(code).start();
 
-        if (images != null) {
-            Log.d("GLOINS", "On fait une mise à jour");
-            new MettreAJour().execute();
-        }
-
         //new  MettreAJour().execute() ;
-
-
-
     }
 
 
     private class MettreAJour extends AsyncTask < Void , Void , Integer    > {
 
-
         public MettreAJour() {}
 
         private int ajout;
-
-
 
         @Override
         protected Integer doInBackground(Void... params) {
@@ -96,15 +88,11 @@ public class PagePrincipal extends AppCompatActivity {
             ajout = 0;
             Image downloadedImage = null ;
 
-
             if (images.size()!=0) {
                 Log.i("RETOUR GLOIN", "On a des images en base");
 
-
                 // code pour recuperer les donnnees dans le xml
                 for (Image image : images) {
-                    ajout = ajout + image.getPrice(); /*- le truc recuperer  */
-
 
                     String url = AchatImageActvity.SERVER_ADRESS + "/pictures/"+image.getName() +".xml" ;
                     Document doc = null;
@@ -123,8 +111,6 @@ public class PagePrincipal extends AppCompatActivity {
                         }
                         boolean isEmpty = (doc==null);
                         Log.d("DOWNLOAD XML", "Mon doc est-il vide ?" + isEmpty);
-
-
                     }
                     catch (Exception e){
                         Log.e("pbl load im", "pbl URL");
@@ -166,14 +152,16 @@ public class PagePrincipal extends AppCompatActivity {
                     }
                     if (downloadedImage.getCurrentPrice()!= 0) {
 
-                        ajout = ajout + image.getPrice() - downloadedImage.getCurrentPrice();
+                        int price = image.getPrice();
+                        int newPrice = downloadedImage.getCurrentPrice();
+                        ajout = ajout + price - newPrice;
                         Log.d("thug" , "ajout qu'on fait "+ ajout ) ;
+                        baseImage.UpdatePrice(image.getName(), image.getPseudo(), newPrice);
+                        Log.d("UPDATE BASE IMAGE", "Ancien prix de l'image " + image.getName() + " : " + price);
+                        Log.d("UPDATE BASE IMAGE","Nouveau prix de l'image "+ image.getName() + " : "+ newPrice);
                     }
 
                 }
-
-
-
 
             }
             return ajout;
@@ -191,15 +179,6 @@ public class PagePrincipal extends AppCompatActivity {
 
         }
     }
-
-
-
-
-
-
-
-
-
 
     public void acheter (View v) {
         if (gloin ==0){ Toast.makeText(this, "tu n'as plus de Gloin :( passe à la boutique pour en racheter" ,Toast.LENGTH_SHORT).show();}
