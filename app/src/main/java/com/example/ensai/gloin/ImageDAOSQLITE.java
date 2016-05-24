@@ -21,8 +21,6 @@ public class ImageDAOSQLITE extends SQLiteOpenHelper {
     private static final int DATA_BASE_VERSION = 1 ;
     private static final String DATA_BASE_NAME ="MA BASE IMAGE ";
 
-
-
     public ImageDAOSQLITE(Context context){
         super(context, DATA_BASE_NAME, null, DATA_BASE_VERSION);
     }
@@ -32,8 +30,6 @@ public class ImageDAOSQLITE extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IMAGE (ImageName TEXT PRIMARY KEY , Price INTEGER , PSEUDO TEXT  )");
 
     }
-
-
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

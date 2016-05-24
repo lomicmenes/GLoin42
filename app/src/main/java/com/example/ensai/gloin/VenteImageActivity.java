@@ -64,6 +64,10 @@ public class VenteImageActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+// Start the Intent
+        startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
     }
 
     public void chargerImgDepuisGallery(View v){

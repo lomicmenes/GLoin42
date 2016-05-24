@@ -1,8 +1,10 @@
 package com.example.ensai.gloin;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -192,15 +194,11 @@ public class PagePrincipal extends AppCompatActivity {
     }
 
     public void vendre (View v){
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         Intent intent = new Intent(this, VenteImageActivity.class);
         intent.putExtra("pseudo", pseudo );
         startActivity(intent);
 
     }
-
-
-
-
-
-
 }

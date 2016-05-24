@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Document;
@@ -24,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -66,15 +64,8 @@ public class AchatImageActvity extends AppCompatActivity {
                 base = new ElementDAOSQLite(getApplicationContext());
                 base.changerGloin(pseudo , -prixAchat);
                 Log.e("MARCHE AChAT", "c'est juste pour savoir si ca a effectuer ca ");
-
-
             }
         };
-
-
-
-
-
     }
 
 
@@ -131,8 +122,6 @@ public class AchatImageActvity extends AppCompatActivity {
                 connection.setReadTimeout(1000 * 3);
                 connection.setConnectTimeout(1000 * 3);
 
-
-
                 return BitmapFactory.decodeStream((InputStream) connection.getContent() , null ,null);
 
             }
@@ -158,7 +147,6 @@ public class AchatImageActvity extends AppCompatActivity {
 
                         saveImageToGallery(downloadedImage, name.getText().toString(), b);
                         Toast.makeText(getApplicationContext(), "image sauvée en galerie", Toast.LENGTH_SHORT).show();
-
 
                 }
                 catch (Exception e){
